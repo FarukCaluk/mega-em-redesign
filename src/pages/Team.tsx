@@ -30,7 +30,7 @@ export default function Team() {
             const color = swatches[i % swatches.length]
             return (
               <Reveal key={m.name} delay={i * 70} variant="scale" className="h-full">
-                <TiltCard glow={color} className="text-center">
+                <TiltCard glow={color} className="!border-primary/10 !bg-gradient-to-br !from-primary/[0.1] !to-primary-light/[0.04] text-center">
                   <div className="p-5">
                     <div
                       className="mx-auto flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold text-white transition-transform duration-300 group-hover/tilt:scale-110"
@@ -42,7 +42,7 @@ export default function Team() {
                     <p className="mt-1 text-sm text-muted">{m.role}</p>
                     {m.email && (
                       <a href={`mailto:${m.email}`} className="mt-3 flex items-center justify-center gap-1.5 text-xs transition-colors duration-300 group-hover/tilt:text-[var(--glow)]" style={{ color }}>
-                        <Mail size={12} /> {m.email}
+                        <Mail size={12} className="shrink-0" /> <span className="min-w-0 truncate">{m.email}</span>
                       </a>
                     )}
                   </div>

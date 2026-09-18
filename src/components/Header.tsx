@@ -4,25 +4,25 @@ import { Menu, X, ChevronDown } from 'lucide-react'
 import { retailLocations } from '../data/locations'
 
 const navLink = ({ isActive }: { isActive: boolean }) =>
-  `relative py-1 text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:bg-primary after:transition-all ${
-    isActive ? 'text-primary after:w-full' : 'text-ink/70 after:w-0 hover:text-primary hover:after:w-full'
+  `relative py-1 text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:bg-primary-light after:transition-all ${
+    isActive ? 'text-white after:w-full' : 'text-white/70 after:w-0 hover:text-white hover:after:w-full'
   }`
 
 function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="group relative">
-      <button className="flex items-center gap-1 text-sm font-medium text-ink/70 transition-colors group-hover:text-primary">
+      <button className="flex items-center gap-1 text-sm font-medium text-white/70 transition-colors group-hover:text-white">
         {label}
         <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
       </button>
       <div className="invisible absolute left-1/2 top-full w-64 -translate-x-1/2 pt-3 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-        <div className="overflow-hidden rounded-2xl border border-black/5 bg-white py-2 shadow-xl">{children}</div>
+        <div className="glass-dark overflow-hidden rounded-2xl py-2">{children}</div>
       </div>
     </div>
   )
 }
 
-const dropdownLink = 'block px-4 py-2.5 text-sm text-ink/70 hover:bg-surface hover:text-primary'
+const dropdownLink = 'block px-4 py-2.5 text-sm text-white/70 hover:bg-white/10 hover:text-white'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -36,14 +36,14 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
+    <header className="fixed left-1/2 top-4 z-50 w-[92%] max-w-6xl -translate-x-1/2">
       <div
-        className={`mx-auto flex max-w-5xl items-center justify-between rounded-full border px-5 py-2.5 backdrop-blur-xl transition-all duration-300 ${
-          scrolled ? 'border-black/5 bg-white/90 shadow-lg shadow-black/5' : 'border-black/5 bg-white/70 shadow-sm'
+        className={`flex items-center justify-between rounded-full px-5 py-2.5 transition-all duration-300 ${
+          scrolled ? 'glass-dark' : 'glass-light'
         }`}
       >
         <NavLink to="/" className="flex items-center gap-2.5">
-          <img src="/images/logo.png" alt="Mega-Em" className="h-8 w-auto" />
+          <img src="/images/logo.png" alt="Mega-Em" className="h-8 w-auto brightness-0 invert" />
         </NavLink>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -53,7 +53,7 @@ export default function Header() {
           <Dropdown label="Poslovne jedinice">
             <NavLink to="/poslovne-jedinice" className={dropdownLink}>Sve poslovnice</NavLink>
             {retailLocations.map((l) => (
-              <NavLink key={l.slug} to={`/poslovne-jedinice#${l.slug}`} className={dropdownLink}>{l.name}</NavLink>
+              <NavLink key={l.slug} to={`/poslovne-jedinice/${l.slug}`} className={dropdownLink}>{l.name}</NavLink>
             ))}
           </Dropdown>
           <Dropdown label="Proizvodi">
@@ -70,20 +70,20 @@ export default function Header() {
           >
             Kontakt
           </NavLink>
-          <button className="lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Meni">
+          <button className="text-white lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Meni">
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {open && (
-        <nav className="mx-auto mt-2 flex max-w-5xl flex-col gap-1 rounded-3xl border border-black/5 bg-white/95 p-5 shadow-xl backdrop-blur-xl lg:hidden">
-          <NavLink to="/" end onClick={() => setOpen(false)} className="py-2.5 text-ink/80">Početna</NavLink>
-          <NavLink to="/o-nama" onClick={() => setOpen(false)} className="py-2.5 text-ink/80">O nama</NavLink>
-          <NavLink to="/nas-tim" onClick={() => setOpen(false)} className="py-2.5 text-ink/80">Naš tim</NavLink>
-          <NavLink to="/poslovne-jedinice" onClick={() => setOpen(false)} className="py-2.5 text-ink/80">Poslovne jedinice</NavLink>
-          <NavLink to="/proizvodi" onClick={() => setOpen(false)} className="py-2.5 text-ink/80">Proizvodi</NavLink>
-          <NavLink to="/galerija" onClick={() => setOpen(false)} className="py-2.5 text-ink/80">Galerija</NavLink>
+        <nav className="glass-dark mt-2 flex flex-col gap-1 rounded-3xl p-5 lg:hidden">
+          <NavLink to="/" end onClick={() => setOpen(false)} className="py-2.5 text-white/80">Početna</NavLink>
+          <NavLink to="/o-nama" onClick={() => setOpen(false)} className="py-2.5 text-white/80">O nama</NavLink>
+          <NavLink to="/nas-tim" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Naš tim</NavLink>
+          <NavLink to="/poslovne-jedinice" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Poslovne jedinice</NavLink>
+          <NavLink to="/proizvodi" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Proizvodi</NavLink>
+          <NavLink to="/galerija" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Galerija</NavLink>
           <NavLink to="/kontakt" onClick={() => setOpen(false)} className="mt-2 rounded-full bg-primary px-5 py-2.5 text-center font-semibold text-white">
             Kontakt
           </NavLink>

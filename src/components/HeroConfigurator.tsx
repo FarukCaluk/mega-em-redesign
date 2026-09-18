@@ -17,7 +17,7 @@ export default function HeroConfigurator() {
 
   return (
     <div className="flex w-full flex-col items-center">
-      <div className="h-[360px] w-full sm:h-[440px] lg:h-[560px] xl:h-[620px]">
+      <div className="h-[320px] w-full overflow-hidden rounded-3xl sm:h-[380px] lg:h-[460px] xl:h-[500px]">
         <Suspense
           fallback={
             <div className="flex h-full items-center justify-center">

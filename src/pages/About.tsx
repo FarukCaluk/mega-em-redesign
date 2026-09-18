@@ -83,9 +83,11 @@ export default function About() {
           <div className="mt-10 space-y-3">
             {brandTimeline.map((b, i) => {
               const color = swatches[i % swatches.length]
+              const t = brandTimeline.length > 1 ? i / (brandTimeline.length - 1) : 0
+              const tint = 0.3 - t * 0.27
               return (
                 <Reveal key={i} delay={Math.min(i * 40, 400)}>
-                  <TiltCard glow={color}>
+                  <TiltCard glow={color} className="!border-primary/10" style={{ background: `rgba(130, 9, 155, ${tint.toFixed(3)})` }}>
                     <div className="flex flex-col gap-1 p-4 sm:flex-row sm:items-center sm:gap-6">
                       <span className="w-16 shrink-0 font-bold transition-colors duration-300 group-hover/tilt:text-[var(--glow)]" style={{ color }}>{b.year}</span>
                       <span className="text-sm text-ink/80">{b.brands}</span>

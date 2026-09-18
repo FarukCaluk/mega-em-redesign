@@ -33,7 +33,7 @@ export default function Footer() {
           <h4 className="mb-4 text-sm font-semibold text-white">Poslovnice</h4>
           <ul className="space-y-2.5 text-sm text-white/60">
             {retailLocations.map((l) => (
-              <li key={l.slug}><Link to={`/poslovne-jedinice#${l.slug}`} className="hover:text-white">{l.name}</Link></li>
+              <li key={l.slug}><Link to={`/poslovne-jedinice/${l.slug}`} className="hover:text-white">{l.name}</Link></li>
             ))}
           </ul>
         </div>

@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Team from './pages/Team'
 import Locations from './pages/Locations'
+import LocationDetail from './pages/LocationDetail'
 import Products from './pages/Products'
 import Gallery from './pages/Gallery'
 import Contact from './pages/Contact'
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/o-nama" element={<About />} />
           <Route path="/nas-tim" element={<Team />} />
           <Route path="/poslovne-jedinice" element={<Locations />} />
+          <Route path="/poslovne-jedinice/:slug" element={<LocationDetail />} />
           <Route path="/proizvodi" element={<Products />} />
           <Route path="/galerija" element={<Gallery />} />
           <Route path="/kontakt" element={<Contact />} />

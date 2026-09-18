@@ -22,24 +22,24 @@ export default function Hero() {
       <div className="pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] rounded-full bg-primary/30 blur-[120px]" />
       <div className="pointer-events-none absolute right-0 top-1/3 h-[420px] w-[420px] rounded-full bg-primary-light/20 blur-[100px]" />
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-6 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:py-28">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-6 pb-14 pt-24 lg:grid-cols-[0.85fr_1.15fr] lg:pb-16 lg:pt-28">
         <motion.div variants={container} initial="hidden" animate="show">
           <motion.span variants={item} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-white/70 backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary-light" /> Od 1996. godine u Bosni i Hercegovini
           </motion.span>
 
-          <motion.h1 variants={item} className="mt-6 text-5xl font-semibold leading-[1.05] md:text-7xl">
+          <motion.h1 variants={item} className="mt-5 text-5xl font-semibold leading-[1.05] md:text-7xl">
             Vaš partner
             <br />
             <span className="bg-gradient-to-r from-primary-light to-primary bg-clip-text text-transparent">od povjerenja</span>
           </motion.h1>
 
-          <motion.p variants={item} className="mt-6 max-w-md text-lg text-white/60">
+          <motion.p variants={item} className="mt-5 max-w-md text-lg text-white/60">
             Autoreparatura i industrijski premazi, distribucija aditiva za fasadne i građevinske
             sisteme, boje, lakovi i alati.
           </motion.p>
 
-          <motion.div variants={item} className="mt-9 flex flex-wrap gap-4">
+          <motion.div variants={item} className="mt-7 flex flex-wrap gap-4">
             <Magnetic>
               <Link
                 to="/proizvodi"
@@ -57,7 +57,7 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          <motion.div variants={item} className="mt-14 flex flex-wrap gap-x-8 gap-y-4 border-t border-white/10 pt-6">
+          <motion.div variants={item} className="mt-9 flex flex-wrap gap-x-8 gap-y-4 border-t border-white/10 pt-5">
             {stats.map((s) => (
               <div key={s.label}>
                 <div className="font-display text-2xl font-semibold">
@@ -73,7 +73,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-          className="relative flex items-center justify-center py-8"
+          className="relative flex items-center justify-center py-2"
         >
           <HeroConfigurator />
         </motion.div>

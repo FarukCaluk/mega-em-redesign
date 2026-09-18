@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# Mega-Em — redizajn web stranice
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Redizajn zvanične web stranice kompanije **Mega-Em d.o.o.** iz Visokog — distributera boja, lakova, autoreparaturnih materijala, industrijskih premaza i građevinske hemije u Bosni i Hercegovini od 1996. godine.
 
-Currently, two official plugins are available:
+## Tehnologije
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **TypeScript** + **Vite**
+- **Tailwind CSS v4** za stilizaciju
+- **React Router v7** za rutiranje između stranica
+- **Framer Motion** za animacije i mikro-interakcije
+- **React Three Fiber** + **drei** + **Three.js** za 3D konfigurator boje na naslovnoj stranici
 
-## React Compiler
+## Stranice
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Početna** — hero sekcija sa interaktivnim 3D konfiguratorom automobila (rotacija mišem, promjena boje laka u realnom vremenu)
+- **O nama** — historijat kompanije, rast tima kroz godine, brendovi kroz godine
+- **Naš tim** — menadžment i pregled po odjelima (prodaja, tehnička podrška, maloprodaje, nabava, finansije, skladište, pravna služba)
+- **Poslovne jedinice** — pregled veleprodaje i svih Mega Color maloprodajnih objekata, sa posvećenom stranicom po poslovnici (kontakt info + Google mapa)
+- **Proizvodi** — kategorije proizvoda, katalozi za preuzimanje, zastupani brendovi
+- **Galerija**
+- **Kontakt** — forma za upit i lokacija na mapi
 
-## Expanding the Oxlint configuration
+## Pokretanje projekta
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Ostale komande:
+
+```bash
+npm run build     # produkcijski build (type-check + Vite build)
+npm run preview   # lokalni pregled produkcijskog builda
+npm run lint      # Oxlint
+```
+
+## Napomena o 3D modelu
+
+3D model automobila korišten u konfiguratoru na naslovnoj stranici ("Car Concept") je generički, nebrendiran model dostupan pod **CC BY 4.0** licencom (© Darmstadt Graphics Group GmbH, Khronos glTF-Sample-Assets). Atribucija se nalazi u podnožju stranice.

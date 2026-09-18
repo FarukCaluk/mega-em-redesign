@@ -41,15 +41,14 @@ export default function CarConfigurator({ color }: { color: string }) {
   return (
     <Canvas camera={{ fov: 35 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
       <Suspense fallback={null}>
-        <Stage environment="studio" intensity={0.55} shadows={{ type: 'contact', opacity: 0.5, blur: 2.5 }} adjustCamera={0.7}>
+        <Stage environment="studio" intensity={0.55} shadows={{ type: 'contact', opacity: 0.5, blur: 2.5 }} adjustCamera={1.5}>
           <Car color={color} />
         </Stage>
       </Suspense>
       <OrbitControls
         makeDefault
         enablePan={false}
-        minDistance={1.5}
-        maxDistance={12}
+        enableZoom={false}
         minPolarAngle={Math.PI / 3.2}
         maxPolarAngle={Math.PI / 2.05}
         autoRotate

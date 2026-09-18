@@ -15,7 +15,7 @@ export default function Products() {
             const color = swatches[i % swatches.length]
             return (
               <Reveal key={c.title} delay={(i % 3) * 80} variant={i % 2 ? 'right' : 'left'} className="h-full">
-                <TiltCard glow={color}>
+                <TiltCard glow={color} className="!border-primary/10 !bg-gradient-to-br !from-primary/[0.1] !to-primary-light/[0.04]">
                   <div className="p-7">
                     <span
                       className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl font-display text-sm font-semibold text-white transition-transform duration-300 group-hover/tilt:scale-110"

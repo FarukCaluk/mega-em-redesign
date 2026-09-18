@@ -50,7 +50,7 @@ export default function Contact() {
         </form>
 
         <Reveal delay={120} className="min-w-0 space-y-6">
-          <div className="space-y-4 rounded-2xl bg-surface p-6">
+          <div className="glass-purple space-y-4 rounded-2xl p-6">
             <div className="flex gap-3"><MapPin className="shrink-0" style={{ color: swatches[0] }} /><span>Industrijska zona Ozrakovići bb, 71300 Visoko, Bosna i Hercegovina</span></div>
             <div className="flex gap-3"><Phone className="shrink-0" style={{ color: swatches[1] }} /><a href="tel:+38732460129" className="hover:underline">+387 (0)32 460 129</a></div>
             <div className="flex gap-3"><Mail className="shrink-0" style={{ color: swatches[4] }} /><a href="mailto:office@mega-em.com" className="hover:underline">office@mega-em.com</a></div>

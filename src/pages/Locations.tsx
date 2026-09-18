@@ -1,4 +1,5 @@
-import { Phone, Mail, MapPin, Clock, Truck } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Phone, Mail, MapPin, Clock, Truck, ArrowRight } from 'lucide-react'
 import { FacebookIcon, InstagramIcon } from '../components/SocialIcons'
 import { wholesale, retailLocations } from '../data/locations'
 import type { Location } from '../data/locations'
@@ -10,7 +11,7 @@ import TiltCard from '../components/TiltCard'
 function LocationCard({ l, featured = false, delay = 0, color = swatches[0] }: { l: Location; featured?: boolean; delay?: number; color?: string }) {
   return (
     <Reveal id={l.slug} delay={delay} className="h-full scroll-mt-24">
-      <TiltCard glow={color} className={featured ? 'grain !border-transparent !bg-deep text-white' : ''}>
+      <TiltCard glow={color} className={featured ? 'grain !border-transparent !bg-deep text-white' : '!border-primary/10 !bg-gradient-to-br !from-primary/[0.1] !to-primary-light/[0.04]'}>
         <div className="p-6">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
@@ -46,13 +47,22 @@ function LocationCard({ l, featured = false, delay = 0, color = swatches[0] }: {
             </ul>
           </div>
 
-          <div className="mt-5 flex gap-3">
-            {l.social.includes('facebook') && (
-              <a href="https://www.facebook.com/megacolorbih" target="_blank" rel="noreferrer" className={`rounded-full p-2 transition hover:scale-110 ${featured ? 'bg-white/10' : 'bg-surface'} hover:text-[var(--glow)]`}><FacebookIcon size={14} /></a>
-            )}
-            {l.social.includes('instagram') && (
-              <a href="https://www.instagram.com/mega_em_d.o.o._visoko/" target="_blank" rel="noreferrer" className={`rounded-full p-2 transition hover:scale-110 ${featured ? 'bg-white/10' : 'bg-surface'} hover:text-[var(--glow)]`}><InstagramIcon size={14} /></a>
-            )}
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <div className="flex gap-3">
+              {l.social.includes('facebook') && (
+                <a href="https://www.facebook.com/megacolorbih" target="_blank" rel="noreferrer" className={`rounded-full p-2 transition hover:scale-110 ${featured ? 'bg-white/10' : 'bg-surface'} hover:text-[var(--glow)]`}><FacebookIcon size={14} /></a>
+              )}
+              {l.social.includes('instagram') && (
+                <a href="https://www.instagram.com/mega_em_d.o.o._visoko/" target="_blank" rel="noreferrer" className={`rounded-full p-2 transition hover:scale-110 ${featured ? 'bg-white/10' : 'bg-surface'} hover:text-[var(--glow)]`}><InstagramIcon size={14} /></a>
+              )}
+            </div>
+            <Link
+              to={`/poslovne-jedinice/${l.slug}`}
+              className={`group/link flex items-center gap-1.5 text-sm font-medium transition-colors ${featured ? 'text-white/80 hover:text-white' : ''}`}
+              style={featured ? undefined : { color }}
+            >
+              Detalji <ArrowRight size={14} className="transition-transform duration-300 group-hover/link:translate-x-1" />
+            </Link>
           </div>
         </div>
       </TiltCard>
