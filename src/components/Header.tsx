@@ -56,11 +56,9 @@ export default function Header() {
               <NavLink key={l.slug} to={`/poslovne-jedinice/${l.slug}`} className={dropdownLink}>{l.name}</NavLink>
             ))}
           </Dropdown>
-          <Dropdown label="Proizvodi">
-            <NavLink to="/proizvodi" className={dropdownLink}>Kategorije i katalozi</NavLink>
-            <a href="https://www.m-shop.ba/" target="_blank" rel="noreferrer" className={dropdownLink}>Web shop</a>
-          </Dropdown>
-          <NavLink to="/galerija" className={navLink}>Galerija</NavLink>
+          <NavLink to="/proizvodi" className={navLink}>Proizvodi</NavLink>
+          <NavLink to="/trening-centar" className={navLink}>Trening centar</NavLink>
+          <NavLink to="/novosti" className={navLink}>Novosti</NavLink>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -83,7 +81,8 @@ export default function Header() {
           <NavLink to="/nas-tim" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Naš tim</NavLink>
           <NavLink to="/poslovne-jedinice" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Poslovne jedinice</NavLink>
           <NavLink to="/proizvodi" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Proizvodi</NavLink>
-          <NavLink to="/galerija" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Galerija</NavLink>
+          <NavLink to="/trening-centar" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Trening centar</NavLink>
+          <NavLink to="/novosti" onClick={() => setOpen(false)} className="py-2.5 text-white/80">Novosti</NavLink>
           <NavLink to="/kontakt" onClick={() => setOpen(false)} className="mt-2 rounded-full bg-primary px-5 py-2.5 text-center font-semibold text-white">
             Kontakt
           </NavLink>

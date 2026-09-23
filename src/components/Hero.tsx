@@ -4,7 +4,6 @@ import { ArrowRight } from 'lucide-react'
 import { stats } from '../data/content'
 import Counter from './Counter'
 import Magnetic from './Magnetic'
-import HeroConfigurator from './HeroConfigurator'
 
 const container = {
   hidden: {},
@@ -70,12 +69,23 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-          className="relative flex items-center justify-center py-2"
+          className="relative"
         >
-          <HeroConfigurator />
+          <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/30 to-primary-light/10 blur-2xl" />
+          <div className="relative h-[240px] overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-primary/20 sm:h-[300px] lg:h-[380px] xl:h-[420px]">
+            <img
+              src="/images/team/tim-mega-em.png"
+              alt="Mega-Em tim ispred skladišta u Visokom"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/0 to-transparent" />
+            <div className="absolute bottom-5 left-5 right-5">
+              <p className="text-sm font-medium text-white/90 sm:text-base">Naš tim — {stats[3].value}+ ljudi posvećenih vašem poslu</p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
