@@ -58,5 +58,3 @@ export const catalogs = [
   { title: 'Katalog autoreparatura', href: 'https://mega-em.com/autoreparatura-katalog/' },
   { title: 'Katalog alata', href: 'https://mega-em.com/katalog-alata/' },
 ]
-
-export const galleryImages = Array.from({ length: 36 }, (_, i) => `/images/gallery/g${i + 1}.jpg`)

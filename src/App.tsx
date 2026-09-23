@@ -8,7 +8,10 @@ import Team from './pages/Team'
 import Locations from './pages/Locations'
 import LocationDetail from './pages/LocationDetail'
 import Products from './pages/Products'
-import Gallery from './pages/Gallery'
+import ProductDetail from './pages/ProductDetail'
+import Novosti from './pages/Novosti'
+import NovostiDetail from './pages/NovostiDetail'
+import TreningCentar from './pages/TreningCentar'
 import Contact from './pages/Contact'
 
 function ScrollToTop() {
@@ -47,7 +50,10 @@ export default function App() {
           <Route path="/poslovne-jedinice" element={<Locations />} />
           <Route path="/poslovne-jedinice/:slug" element={<LocationDetail />} />
           <Route path="/proizvodi" element={<Products />} />
-          <Route path="/galerija" element={<Gallery />} />
+          <Route path="/proizvodi/:id" element={<ProductDetail />} />
+          <Route path="/novosti" element={<Novosti />} />
+          <Route path="/novosti/:slug" element={<NovostiDetail />} />
+          <Route path="/trening-centar" element={<TreningCentar />} />
           <Route path="/kontakt" element={<Contact />} />
         </Route>
       </Routes>

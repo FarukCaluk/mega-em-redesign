@@ -24,7 +24,8 @@ export default function Footer() {
           <ul className="space-y-2.5 text-sm text-white/60">
             <li><Link to="/o-nama" className="hover:text-white">O nama</Link></li>
             <li><Link to="/nas-tim" className="hover:text-white">Naš tim</Link></li>
-            <li><Link to="/galerija" className="hover:text-white">Galerija</Link></li>
+            <li><Link to="/novosti" className="hover:text-white">Novosti</Link></li>
+            <li><Link to="/trening-centar" className="hover:text-white">Trening centar</Link></li>
             <li><Link to="/kontakt" className="hover:text-white">Kontakt i karijera</Link></li>
           </ul>
         </div>
@@ -50,10 +51,6 @@ export default function Footer() {
 
       <div className="border-t border-white/10 px-6 py-5 text-center text-xs text-white/40">
         © {new Date().getFullYear()} Mega-Em d.o.o. Sva prava zadržana.
-        <span className="block mt-1 text-white/25">
-          3D model "Car Concept" © Darmstadt Graphics Group GmbH,{' '}
-          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="hover:text-white/50">CC BY 4.0</a>
-        </span>
       </div>
     </footer>
   )
