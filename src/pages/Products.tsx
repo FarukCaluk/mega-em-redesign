@@ -1,17 +1,19 @@
 import { FileText } from 'lucide-react'
-import { catalogs, partners, swatches } from '../data/content'
+import { useLocation } from 'react-router-dom'
+import { catalogs, swatches } from '../data/content'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
 import TiltCard from '../components/TiltCard'
 import ProductCatalog from '../components/ProductCatalog'
 
 export default function Products() {
+  const { search } = useLocation()
   return (
     <>
-      <PageIntro eyebrow="Proizvodi" title="Kompletan asortiman za vaše potrebe" description="Pretražite katalog po nazivu, brendu, šifri ili kategoriji proizvoda." />
+      <PageIntro eyebrow="Katalog proizvoda" title="Katalog proizvoda" description="Pretražite katalog po nazivu, brendu, šifri ili kategoriji proizvoda." />
 
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <ProductCatalog />
+        <ProductCatalog key={search} />
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-24">
@@ -33,19 +35,6 @@ export default function Products() {
               </Reveal>
             )
           })}
-        </div>
-      </section>
-
-      <section className="bg-surface py-24">
-        <div className="mx-auto max-w-6xl px-6">
-          <Reveal><h2 className="mb-8 text-center font-display text-2xl font-semibold text-ink">Zastupamo svjetske brendove</h2></Reveal>
-          <div className="grid grid-cols-3 gap-6 sm:grid-cols-4 lg:grid-cols-6">
-            {partners.map((p, i) => (
-              <Reveal key={p.id} delay={(i % 6) * 50} className="flex items-center justify-center rounded-xl bg-white p-4 ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-md">
-                <img src={p.logo} alt={p.id} className="h-8 w-auto object-contain" />
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
     </>

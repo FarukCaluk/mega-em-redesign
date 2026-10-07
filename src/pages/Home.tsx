@@ -1,16 +1,23 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, MapPin } from 'lucide-react'
-import { productCategories, swatches } from '../data/content'
-import { retailLocations } from '../data/locations'
+import { ArrowRight, MapPin, Car, ShieldCheck, FlaskConical, GraduationCap } from 'lucide-react'
+import { swatches } from '../data/content'
+import { franchises } from '../data/franchises'
 import PartnersMarquee from '../components/PartnersMarquee'
 import Reveal from '../components/Reveal'
 import Hero from '../components/Hero'
 import TiltCard from '../components/TiltCard'
 
+// ponytail: tekst i slika za svaki stub stižu od klijenta — dodaj `image` kad bude gotova
+const pillars: { title: string; desc: string; icon: typeof Car; image?: string }[] = [
+  { title: 'Autoreparatura', desc: 'MIPA boje i lakovi, kitovi, primeri, abrazivi, alati i oprema za profesionalnu autoreparaturu.', icon: Car },
+  { title: 'Sistemi za antikorozivnu zaštitu', desc: 'Premazi i sistemi za zaštitu metalnih površina od korozije u industriji i građevinarstvu.', icon: ShieldCheck },
+  { title: 'Aditivi za građevinsku hemiju', desc: 'Sirovine i aditivi za proizvodnju fasadnih sistema i građevinskih materijala.', icon: FlaskConical },
+]
+
 const features = [
   { n: '01', title: 'Dostava na adresu', desc: 'Brza dostava iz našeg skladišta u Visokom širom BiH.' },
-  { n: '02', title: 'Tehničko savjetovanje', desc: 'Jedini u BiH nudimo stručno tehničko savjetovanje i demonstraciju proizvoda.' },
-  { n: '03', title: '30+ svjetskih brendova', desc: 'Zastupamo renomirane proizvođače hemikalija, boja i alata.' },
+  { n: '02', title: 'Tehničko savjetovanje', desc: 'Tehničko savjetovanje i demonstracije proizvoda kroz edukacijski centar u Visokom ili na Vašoj adresi.' },
+  { n: '03', title: '30+ svjetskih brendova', desc: 'Zastupamo renomirane proizvođače hemikalija, boja i opreme.' },
 ]
 
 export default function Home() {
@@ -20,33 +27,23 @@ export default function Home() {
 
       <section className="mx-auto max-w-6xl px-6 py-24">
         <Reveal className="mb-10 flex items-end justify-between gap-6">
-          <div>
-            <h2 className="text-3xl font-semibold text-ink">Šta radimo</h2>
-            <p className="mt-2 max-w-md text-muted">Kompletan asortiman za autoreparaturu, građevinarstvo i industriju.</p>
-          </div>
+          <h2 className="text-3xl font-semibold text-ink">Tri stuba našeg asortimana</h2>
           <Link to="/proizvodi" className="hidden shrink-0 items-center gap-1.5 font-semibold text-primary hover:underline sm:flex">
-            Svi proizvodi <ArrowRight size={16} />
+            Katalog proizvoda <ArrowRight size={16} />
           </Link>
         </Reveal>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
-          {productCategories.slice(0, 4).map((c, i) => {
-            if (i === 0) {
-              return (
-                <Reveal key={c.title} delay={i * 80} className="rounded-2xl bg-primary p-7 text-white transition hover:-translate-y-1 lg:col-span-2 lg:row-span-2 lg:p-9">
-                  <span className="font-display text-sm text-white/60">0{i + 1}</span>
-                  <h3 className="mt-3 font-display text-xl font-semibold">{c.title}</h3>
-                  <p className="mt-2 text-sm text-white/75">{c.desc}</p>
-                </Reveal>
-              )
-            }
+        <div className="grid gap-5 md:grid-cols-3">
+          {pillars.map((p, i) => {
             const color = swatches[i % swatches.length]
             return (
-              <Reveal key={c.title} delay={i * 80} className="h-full lg:col-span-2">
-                <TiltCard glow={color} className="!bg-surface">
-                  <div className="p-7">
-                    <span className="font-display text-sm transition-colors duration-300 group-hover/tilt:text-[var(--glow)]" style={{ color }}>0{i + 1}</span>
-                    <h3 className="mt-3 font-display text-xl font-semibold text-ink">{c.title}</h3>
-                    <p className="mt-2 text-sm text-muted">{c.desc}</p>
+              <Reveal key={p.title} delay={i * 80} className="h-full">
+                <TiltCard glow={color} className="overflow-hidden !bg-surface">
+                  <div className="flex aspect-[16/10] items-center justify-center" style={{ background: `${color}14` }}>
+                    {p.image ? <img loading="lazy" decoding="async" src={p.image} alt={p.title} className="h-full w-full object-cover" /> : <p.icon size={44} style={{ color }} />}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-display text-xl font-semibold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{p.title}</h3>
+                    <p className="mt-2 text-sm text-muted">{p.desc}</p>
                   </div>
                 </TiltCard>
               </Reveal>
@@ -74,21 +71,39 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <Reveal>
+          <div className="grain relative overflow-hidden rounded-3xl bg-deep p-8 text-white sm:p-12">
+            <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/40 blur-[90px]" />
+            <div className="relative flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+              <div className="max-w-xl">
+                <GraduationCap size={32} className="text-primary-light" />
+                <h2 className="mt-4 text-3xl font-semibold">Rezervišite termin u edukacijskom centru</h2>
+                <p className="mt-3 text-white/70">Edukacijski centar je dostupan za sve naše partnere, popunite formular i pošaljite zahtjev.</p>
+              </div>
+              <Link to="/edukacijski-centar" className="flex shrink-0 items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/25">
+                Popunite formular <ArrowRight size={18} />
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       <section className="bg-surface py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Reveal>
             <h2 className="text-3xl font-semibold text-ink">Pronađite nas u vašem gradu</h2>
-            <p className="mt-2 text-muted">Šest Mega Color prodajnih mjesta u centralnoj Bosni.</p>
+            <p className="mt-2 text-muted">14 franšiznih poslovnica širom BiH</p>
           </Reveal>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {retailLocations.map((l, i) => {
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {franchises.map((f, i) => {
               const color = swatches[(i + 1) % swatches.length]
               return (
-                <Reveal key={l.slug} delay={i * 60}>
+                <Reveal key={f.slug} delay={(i % 4) * 60}>
                   <TiltCard glow={color}>
-                    <Link to={`/poslovne-jedinice#${l.slug}`} className="flex items-center gap-3 p-4">
+                    <Link to={`/franzizni-partneri#${f.slug}`} className="flex items-center gap-3 p-4">
                       <MapPin className="shrink-0 transition-colors duration-300 group-hover/tilt:text-[var(--glow)]" style={{ color }} size={20} />
-                      <span className="font-medium text-ink">{l.name}</span>
+                      <span className="font-medium text-ink">{f.city}</span>
                     </Link>
                   </TiltCard>
                 </Reveal>

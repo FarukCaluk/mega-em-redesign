@@ -19,7 +19,7 @@ export default function Novosti() {
             <TiltCard glow={swatches[0]} className="overflow-hidden">
               <div className="grid gap-0 lg:grid-cols-2">
                 <div className="aspect-[16/10] overflow-hidden lg:aspect-auto">
-                  <img src={featured.image} alt={featured.title} className="h-full w-full object-cover transition duration-700 group-hover/tilt:scale-105" />
+                  <img loading="lazy" decoding="async" src={featured.image} alt={featured.title} className="h-full w-full object-cover transition duration-700 group-hover/tilt:scale-105" />
                 </div>
                 <div className="flex flex-col justify-center p-8 sm:p-10">
                   <span className="inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white" style={{ background: swatches[0] }}>
@@ -45,7 +45,7 @@ export default function Novosti() {
                   <TiltCard glow={color} className="h-full overflow-hidden">
                     <div className="flex h-full flex-col">
                       <div className="aspect-[16/10] overflow-hidden">
-                        <img src={post.image} alt={post.title} className="h-full w-full object-cover transition duration-700 group-hover/tilt:scale-105" />
+                        <img loading="lazy" decoding="async" src={post.image} alt={post.title} className="h-full w-full object-cover transition duration-700 group-hover/tilt:scale-105" />
                       </div>
                       <div className="flex flex-1 flex-col p-6">
                         <span className="w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide" style={{ background: `${color}1a`, color }}>

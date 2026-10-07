@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, PackageSearch, SlidersHorizontal, ArrowRight } from 'lucide-react'
-import { products, productCategoryList, productBrandList } from '../data/products'
+import { products, productCategoryList, productBrandList, productIntro } from '../data/products'
+import { brandByName } from '../data/brands'
 import { swatches } from '../data/content'
 import TiltCard from './TiltCard'
 
@@ -38,9 +39,14 @@ function FilterGroup({
 }
 
 export default function ProductCatalog() {
-  const [query, setQuery] = useState('')
+  const params = useSearchParams()[0]
+  const [query, setQuery] = useState(params.get('q') ?? '')
   const [activeCategories, setActiveCategories] = useState<string[]>([])
-  const [activeBrands, setActiveBrands] = useState<string[]>([])
+  const brandParam = params.get('brend')
+  const [activeBrands, setActiveBrands] = useState<string[]>(() => {
+    const b = brandByName(brandParam)
+    return b ? [productBrandList.find((x) => x.toLowerCase() === b.name.toLowerCase()) ?? b.name] : []
+  })
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const toggle = (list: string[], set: (v: string[]) => void, value: string) =>
@@ -56,6 +62,7 @@ export default function ProductCatalog() {
     })
   }, [query, activeCategories, activeBrands])
 
+  const brandInfo = activeBrands.length === 1 ? brandByName(activeBrands[0]) : undefined
   const activeCount = activeCategories.length + activeBrands.length
 
   const filterPanel = (
@@ -119,29 +126,31 @@ export default function ProductCatalog() {
           )}
         </AnimatePresence>
 
+        {brandInfo && (
+          <div className="mt-5 flex gap-5 rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] to-primary-light/[0.02] p-6">
+            {brandInfo.logo && <img loading="lazy" decoding="async" src={brandInfo.logo} alt={brandInfo.name} className="hidden h-12 w-auto max-w-[120px] shrink-0 object-contain sm:block" />}
+            <div>
+              <h2 className="font-display text-xl font-semibold text-ink">{brandInfo.name}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{brandInfo.long ?? brandInfo.intro ?? 'Opis brenda uskoro.'}</p>
+            </div>
+          </div>
+        )}
+
         <p className="mt-5 text-sm text-muted">
           {filtered.length} {filtered.length === 1 ? 'proizvod' : 'proizvoda'}
         </p>
 
-        <motion.div layout className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          <AnimatePresence mode="popLayout">
+        <div className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((p, i) => {
               const color = swatches[productCategoryList.indexOf(p.category) % swatches.length]
               return (
-                <motion.div
-                  key={p.id}
-                  layout
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.3, delay: (i % 6) * 0.03 }}
-                >
+                <div key={p.id} className="animate-fade-up" style={{ animationDelay: `${(i % 6) * 30}ms` }}>
                   <Link to={`/proizvodi/${p.id}`} className="block h-full">
                     <TiltCard glow={color} className="h-full !border-primary/10 !bg-gradient-to-br !from-primary/[0.06] !to-primary-light/[0.02]">
                       <div className="flex h-full flex-col">
                         {p.image ? (
                           <div className="aspect-[4/3] overflow-hidden rounded-t-2xl bg-white">
-                            <img src={p.image} alt={p.name} className="h-full w-full object-contain p-4 transition duration-500 group-hover/tilt:scale-105" />
+                            <img loading="lazy" decoding="async" src={p.image} alt={p.name} className="h-full w-full object-contain p-4 transition duration-500 group-hover/tilt:scale-105" />
                           </div>
                         ) : (
                           <div className="flex aspect-[4/3] items-center justify-center rounded-t-2xl" style={{ background: `${color}14` }}>
@@ -151,12 +160,9 @@ export default function ProductCatalog() {
                           </div>
                         )}
                         <div className="flex flex-1 flex-col p-6">
-                          <div className="flex items-start justify-between gap-3">
-                            <p className="text-xs font-medium uppercase tracking-wide" style={{ color }}>{p.brand}</p>
-                            <span className="shrink-0 rounded-full bg-surface px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-muted">{p.sku}</span>
-                          </div>
+                          <p className="text-xs font-medium uppercase tracking-wide" style={{ color }}>{p.brand}</p>
                           <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{p.name}</h3>
-                          <p className="mt-2 flex-1 text-sm text-muted line-clamp-3">{p.description}</p>
+                          <p className="mt-2 flex-1 text-sm text-muted line-clamp-3">{productIntro(p)}</p>
                           <span className="mt-4 flex items-center gap-1.5 text-sm font-medium" style={{ color }}>
                             Detalji <ArrowRight size={14} />
                           </span>
@@ -164,11 +170,10 @@ export default function ProductCatalog() {
                       </div>
                     </TiltCard>
                   </Link>
-                </motion.div>
+                </div>
               )
             })}
-          </AnimatePresence>
-        </motion.div>
+        </div>
 
         {filtered.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-20 text-center">
