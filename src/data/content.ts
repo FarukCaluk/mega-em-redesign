@@ -8,20 +8,9 @@ export const partners = [
 ].map((id) => ({ id, logo: `/images/partners/${id}-logo.png` }))
 
 export const stats = [
-  { value: 7, suffix: '', label: 'Poslovnica' },
-  { value: 30, suffix: '', label: 'Godina poslovanja' },
-  { value: 30, suffix: '+', label: 'Partnera' },
-  { value: 43, suffix: '+', label: 'Radnika' },
-]
-
-export const employeeGrowth = [
-  { year: '1996.', count: 3 },
-  { year: '2000.', count: 4 },
-  { year: '2005.', count: 5 },
-  { year: '2010.', count: 11 },
-  { year: '2015.', count: 19 },
-  { year: '2020.', count: 39 },
-  { year: '2021.', count: 43 },
+  { value: 10, suffix: '', label: 'Franšiznih partnera' },
+  { value: 30, suffix: '+', label: 'Godina poslovanja' },
+  { value: 30, suffix: '', label: 'Uposlenika' },
 ]
 
 export const brandTimeline = [

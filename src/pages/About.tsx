@@ -1,23 +1,19 @@
 import { Link } from 'react-router-dom'
-import { stats, employeeGrowth, brandTimeline, swatches } from '../data/content'
+import { brandTimeline, swatches } from '../data/content'
 import Reveal from '../components/Reveal'
-import Counter from '../components/Counter'
 import PageIntro from '../components/PageIntro'
 import TiltCard from '../components/TiltCard'
-import { useInView } from '../hooks/useInView'
 
 const paragraphs = [
-  'U februaru 1996. godine, supružnici Adna i Mugdim Efendira osnovali su preduzeće Mega-Em d.o.o., čija je osnovna djelatnost bila trgovina građevinskim materijalom na veliko.',
-  'Godine 1998. firma dobiva zastupništvo za Bosnu i Hercegovinu bijelog cementa kompanije Hirocem Slovačka, kasnije Holcim, odnosno današnji CRH. Bijeli cement je danas jedan od najprepoznatljivijih proizvoda iz Mega-Em portfolija.',
-  'Kako su najveći potrošači bijelog cementa bili proizvođači fasada i betonskih galanterija, firma uviđa priliku da se dodatno pozicionira kod tih klijenata te širi paletu proizvoda na asortiman građevinskih aditiva i boja za betonske proizvode. Kompanija počinje upošljavati tehničke kadrove te svojim klijentima pomaže u tehničkom savjetovanju.',
-  'Godine 2009. Mega-Em širi poslovanje u segmentu maloprodaje i otvara prvu poslovnicu "Mega Color" u Visokom, specijaliziranu za prodaju boja, lakova i autoreparaturnih materijala. Danas Mega-Em broji šest maloprodajnih objekata na teritoriji središnje Bosne.',
-  'Godine 2011. kompanija širi asortiman u veleprodaji i maloprodaji te započinje saradnju sa njemačkom kompanijom Mipa za distribuciju proizvoda na teritoriji BiH — danas jedan od naših najprepoznatljivijih proizvoda iz oblasti autoreparaturnih materijala i industrijskih premaza. Jedina smo kompanija u BiH koja pored prodajnih predstavnika svojim klijentima nudi usluge tehničkog savjetovanja i demonstracije proizvoda.',
+  'Kompanija Mega-Em d.o.o. Visoko osnovana je u februaru 1996. godine, kada su supružnici Adna i Mugdim Efendira pokrenuli poslovanje sa osnovnom djelatnošću trgovine građevinskim materijalom na veliko.',
+  'Već 1998. godine kompanija ostvaruje značajan poslovni iskorak dobivanjem zastupništva za Bosnu i Hercegovinu za bijeli cement kompanije Holcim, danas CRH. Paralelno sa razvojem ovog segmenta, Mega-Em postepeno uvodi druge sirovine i aditive, kontinuirano proširujući i upotpunjujući svoj portfolio kako bi svojim kupcima ponudili sveobuhvatna rješenja i odgovorili na njihove rastuće potrebe. Zahvaljujući dugogodišnjem iskustvu, stručnosti i kontinuiranom razvoju, Mega-Em je danas jedan od vodećih distributera sirovina i aditiva u Bosni i Hercegovini za proizvodnju fasadnih sistema i građevinskih materijala.',
+  'Godine 2009. Mega-Em širi svoje poslovanje na segment maloprodaje otvaranjem prve poslovnice „Mega Color“ u Visokom, specijalizirane trgovine za prodaju boja, lakova i autoreparaturnih materijala. Kontinuiranim razvojem i širenjem poslovne mreže, Mega-Em danas svoju prisutnost na tržištu dodatno jača kroz 10 franšiznih partnera širom Bosne i Hercegovine, omogućavajući kupcima dostupnost kvalitetnog asortimana i stručne podrške na različitim lokacijama.',
+  'Godine 2011. kompanija započinje partnerstvo sa njemačkom kompanijom Mipa na distribuciji proizvoda na teritoriji Bosne i Hercegovine, čime otvara novi poslovni segment u oblasti autoreparaturnih materijala i industrijskih premaza. Razvojem ovog segmenta, Mega-Em kontinuirano obogaćuje svoju ponudu renomiranim svjetskim brendovima, pratećim potrošnim materijalom, mašinama i opremom, s ciljem da profesionalnim autolakirerima i radionicama ponudi kompletna rješenja za pripremu, popravku i lakiranje vozila.',
+  'Godine 2025. Mega-Em ostvaruje još jedan značajan poslovni iskorak postajući zastupnik renomiranog svjetskog brenda PPG za Bosnu i Hercegovinu. Ovim partnerstvom dodatno širimo i unapređujemo ponudu u premium segmentu autolakirerskih materijala i profesionalnih rješenja.',
+  'Mega-Em svojim partnerima pruža tehničku podršku, savjetovanje i pomoć pri odabiru i primjeni proizvoda. Od 2026. godine, dodatnu vrijednost našoj ponudi predstavlja i Trening centar Mega-Em, namijenjen stručnom usavršavanju, edukaciji i praktičnoj obuci. Centar je otvoren kako za naše postojeće partnere i kupce, tako i za nove generacije stručnjaka, pružajući im mogućnost da kroz teorijska znanja i praktičan rad unaprijede svoje vještine i upoznaju se sa savremenim rješenjima i tehnologijama u našim poslovnim segmentima.',
 ]
 
 export default function About() {
-  const maxCount = Math.max(...employeeGrowth.map((e) => e.count))
-  const { ref: chartRef, inView: chartInView } = useInView<HTMLDivElement>(0.3)
-
   return (
     <>
       <PageIntro eyebrow="O nama" title="Historijat kompanije" />
@@ -28,50 +24,6 @@ export default function About() {
             <p className={`leading-relaxed ${i === 0 ? 'text-lg text-ink/80' : 'mt-5 text-muted'}`}>{p}</p>
           </Reveal>
         ))}
-      </section>
-
-      <section className="bg-surface py-16">
-        <div className="mx-auto grid max-w-6xl gap-4 px-6 sm:grid-cols-4">
-          {stats.map((s, i) => {
-            const color = swatches[i % swatches.length]
-            return (
-              <Reveal key={s.label} delay={i * 100} className="h-full">
-                <TiltCard glow={color} className="text-center">
-                  <div className="p-6">
-                    <div className="text-3xl font-semibold transition-colors duration-300 group-hover/tilt:text-[var(--glow)]" style={{ color }}>
-                      <Counter value={s.value} suffix={s.suffix} />
-                    </div>
-                    <div className="mt-1 text-sm text-muted">{s.label}</div>
-                  </div>
-                </TiltCard>
-              </Reveal>
-            )
-          })}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-4xl px-6 py-16">
-        <Reveal className="text-center">
-          <h2 className="text-3xl font-semibold text-ink">Rast tima kroz godine</h2>
-          <p className="mt-2 text-muted">Broj zaposlenih od osnivanja do danas</p>
-        </Reveal>
-        <div ref={chartRef} className="mt-10 flex items-end justify-between gap-2">
-          {employeeGrowth.map((e, i) => {
-            const color = swatches[i % swatches.length]
-            return (
-              <div key={e.year} className="flex flex-1 flex-col items-center gap-2">
-                <span className={`text-sm font-bold text-ink transition-opacity duration-500 ${chartInView ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${i * 90 + 400}ms` }}>
-                  {e.count}
-                </span>
-                <div
-                  className="w-full rounded-t-md transition-[height] duration-700 ease-out"
-                  style={{ height: chartInView ? `${(e.count / maxCount) * 140}px` : 0, transitionDelay: `${i * 90}ms`, background: color }}
-                />
-                <span className="text-xs text-muted">{e.year}</span>
-              </div>
-            )
-          })}
-        </div>
       </section>
 
       <section className="bg-surface py-16">

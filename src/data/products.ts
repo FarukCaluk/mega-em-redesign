@@ -6,7 +6,13 @@ export interface Product {
   sku: string
   description: string
   image?: string
+  intro?: string
+  supplierName?: string
+  manufacturer?: string
+  variants?: { name: string; pack: string; code: string }[]
 }
+
+export const productIntro = (p: Product) => p.intro ?? p.description.split(/(?<=\.)\s/)[0]
 
 // izvučeno iz stvarnog kataloga (Katalog-Autoreparatura) — realan presjek asortimana
 export const products: Product[] = [

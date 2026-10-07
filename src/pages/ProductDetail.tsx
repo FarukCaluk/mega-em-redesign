@@ -1,5 +1,5 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Tag, Boxes, Factory } from 'lucide-react'
+import { ArrowLeft, Boxes, Factory, Truck } from 'lucide-react'
 import { products, productCategoryList } from '../data/products'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
@@ -16,11 +16,11 @@ export default function ProductDetail() {
 
   return (
     <>
-      <PageIntro eyebrow="Proizvodi" title={product.name} description={product.category} />
+      <PageIntro eyebrow="Katalog proizvoda" title={product.name} description={product.category} />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
         <Link to="/proizvodi" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary">
-          <ArrowLeft size={16} /> Nazad na proizvode
+          <ArrowLeft size={16} /> Nazad na katalog
         </Link>
 
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
@@ -47,31 +47,42 @@ export default function ProductDetail() {
 
             <div className="mt-8 grid gap-4 rounded-2xl border border-black/5 bg-surface p-6 sm:grid-cols-3">
               <div>
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Factory size={13} /> Proizvođač</p>
-                <p className="mt-1.5 font-semibold text-ink">{product.brand}</p>
-              </div>
-              <div>
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Tag size={13} /> Šifra</p>
-                <p className="mt-1.5 font-semibold text-ink">{product.sku}</p>
-              </div>
-              <div>
                 <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Boxes size={13} /> Kategorija</p>
                 <p className="mt-1.5 font-semibold text-ink">{product.category}</p>
               </div>
+              <div>
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Truck size={13} /> Naziv dobavljača</p>
+                <p className="mt-1.5 font-semibold text-ink">{product.supplierName ?? '—'}</p>
+              </div>
+              <div>
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Factory size={13} /> Proizvođač</p>
+                <p className="mt-1.5 font-semibold text-ink">{product.manufacturer ?? product.brand}</p>
+              </div>
             </div>
-
-            <Link
-              to="/kontakt"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/25 active:translate-y-0"
-            >
-              Pitaj za dostupnost
-            </Link>
           </Reveal>
         </div>
 
+        {product.variants && product.variants.length > 0 && (
+          <div className="mt-16">
+            <h3 className="font-display text-xl font-semibold text-ink">Dostupne varijante</h3>
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
+              <table className="w-full min-w-[420px] text-left text-sm">
+                <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
+                  <tr><th className="px-5 py-3">Naziv</th><th className="px-5 py-3">Komada u paketu</th><th className="px-5 py-3">Online šifra</th></tr>
+                </thead>
+                <tbody className="divide-y divide-black/5">
+                  {product.variants.map((v) => (
+                    <tr key={v.code}><td className="px-5 py-3 font-medium text-ink">{v.name}</td><td className="px-5 py-3 text-muted">{v.pack}</td><td className="px-5 py-3 text-muted">{v.code}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {related.length > 0 && (
           <div className="mt-20">
-            <h3 className="font-display text-xl font-semibold text-ink">Slični proizvodi</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">Povezani proizvodi</h3>
             <div className="mt-6 grid gap-5 sm:grid-cols-3">
               {related.map((p) => (
                 <Link key={p.id} to={`/proizvodi/${p.id}`} className="rounded-2xl border border-black/5 bg-white p-5 transition hover:-translate-y-1 hover:shadow-md">
