@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Phone, Mail } from 'lucide-react'
 import { departments } from '../data/team'
 import { swatches } from '../data/content'
@@ -10,6 +11,9 @@ function initials(name: string) {
 }
 
 export default function Team() {
+  const [active, setActive] = useState('all')
+  const shown = active === 'all' ? departments : departments.filter((d) => d.id === active)
+
   return (
     <>
       <PageIntro
@@ -18,8 +22,20 @@ export default function Team() {
         description="Već duži niz godina sarađujemo sa vodećim domaćim i stranim kompanijama. Svim našim partnerima nudimo tehničko savjetovanje i demonstraciju proizvoda."
       />
 
-      <section className="mx-auto max-w-6xl space-y-14 px-6 py-16">
-        {departments.map((d, di) => (
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-10 flex flex-wrap gap-2">
+          {[{ id: 'all', label: 'Svi uposlenici' }, ...departments].map((d) => (
+            <button
+              key={d.id}
+              onClick={() => setActive(d.id)}
+              className={`rounded-full px-4 py-2 text-sm font-medium ring-1 transition active:scale-95 ${active === d.id ? 'bg-primary text-white ring-primary' : 'bg-white text-ink/70 ring-black/10 hover:text-primary'}`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+        <div className="space-y-14">
+        {shown.map((d, di) => (
           <div key={d.id}>
             <Reveal>
               <h2 className="mb-6 text-xl font-bold text-ink">{d.label}</h2>
@@ -57,6 +73,7 @@ export default function Team() {
             </div>
           </div>
         ))}
+        </div>
       </section>
     </>
   )

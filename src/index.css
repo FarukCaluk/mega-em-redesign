@@ -1,5 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0020-007E,U+00A0-00FF,U+2013,U+2014,U+2018,U+2019,U+201A,U+201C,U+201D,U+201E,U+2022,U+2026,U+20AC,U+2122;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/inter-ext.woff2') format('woff2');
+  unicode-range: U+0106,U+0107,U+010C,U+010D,U+0110,U+0111,U+0160,U+0161,U+017D,U+017E;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/sg-latin.woff2') format('woff2');
+  unicode-range: U+0020-007E,U+00A0-00FF,U+2013,U+2014,U+2018,U+2019,U+201A,U+201C,U+201D,U+201E,U+2022,U+2026,U+20AC,U+2122;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/sg-ext.woff2') format('woff2');
+  unicode-range: U+0106,U+0107,U+010C,U+010D,U+0110,U+0111,U+0160,U+0161,U+017D,U+017E;
+}
 
 @theme {
   --color-primary: #82099b;
@@ -21,7 +53,6 @@ body {
     radial-gradient(700px 450px at 100% 20%, rgba(161, 60, 176, 0.045), transparent 55%),
     radial-gradient(600px 400px at 20% 100%, rgba(130, 9, 155, 0.04), transparent 55%),
     #fdfcfe;
-  background-attachment: fixed;
   overflow-x: hidden;
 }
 
@@ -106,4 +137,8 @@ html {
 
 .animate-scale-in {
   animation: scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (max-width: 767px) {
+  .grain::before { display: none; }
 }

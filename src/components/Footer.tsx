@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="bg-ink text-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <img loading="lazy" decoding="async" src="/images/logo.png" alt="Mega-Em" className="h-10 w-auto brightness-0 invert" />
+          <img loading="lazy" decoding="async" src="/images/logo.webp" width="300" height="80" alt="Mega-Em" className="h-10 w-auto brightness-0 invert" />
           <p className="mt-4 text-sm text-white/60">
             Visoko specijalizovani distributer hemikalija, autoreparaturnih materijala i alata u Bosni i Hercegovini od 1996. godine.
           </p>
@@ -28,7 +28,8 @@ export default function Footer() {
             <li><Link to="/brendovi" className="hover:text-white">Brendovi</Link></li>
             <li><Link to="/proizvodi" className="hover:text-white">Katalog proizvoda</Link></li>
             <li><Link to="/edukacijski-centar" className="hover:text-white">Edukacijski centar</Link></li>
-            <li><Link to="/kontakt" className="hover:text-white">Kontakt i karijera</Link></li>
+            <li><Link to="/karijera" className="hover:text-white">Karijera</Link></li>
+            <li><Link to="/kontakt" className="hover:text-white">Kontakt</Link></li>
           </ul>
         </div>
 

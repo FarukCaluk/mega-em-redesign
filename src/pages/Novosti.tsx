@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar } from 'lucide-react'
+import { Calendar, ChevronDown, ArrowRight } from 'lucide-react'
 import { newsPosts } from '../data/news'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
@@ -8,6 +9,9 @@ import TiltCard from '../components/TiltCard'
 
 export default function Novosti() {
   const [featured, ...rest] = newsPosts
+  const latest = rest.slice(0, 3)
+  const older = rest.slice(3)
+  const [showOlder, setShowOlder] = useState(false)
 
   return (
     <>
@@ -30,6 +34,7 @@ export default function Novosti() {
                   <div className="mt-5 flex items-center gap-2 text-sm text-muted">
                     <Calendar size={15} /> {featured.date}
                   </div>
+                  <span className="mt-4 flex items-center gap-1.5 text-sm font-medium text-primary">Čitaj dalje <ArrowRight size={14} /></span>
                 </div>
               </div>
             </TiltCard>
@@ -37,7 +42,7 @@ export default function Novosti() {
         </Reveal>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {rest.map((post, i) => {
+          {latest.map((post, i) => {
             const color = swatches[(i + 1) % swatches.length]
             return (
               <Reveal key={post.slug} delay={i * 80} className="h-full">
@@ -56,6 +61,7 @@ export default function Novosti() {
                         <div className="mt-4 flex items-center gap-2 text-xs text-muted">
                           <Calendar size={13} /> {post.date}
                         </div>
+                        <span className="mt-3 flex items-center gap-1.5 text-sm font-medium" style={{ color }}>Čitaj dalje <ArrowRight size={14} /></span>
                       </div>
                     </div>
                   </TiltCard>
@@ -64,6 +70,36 @@ export default function Novosti() {
             )
           })}
         </div>
+        {older.length > 0 && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setShowOlder((v) => !v)}
+              aria-expanded={showOlder}
+              className="inline-flex items-center gap-2 rounded-full border border-primary/20 px-6 py-3 font-semibold text-primary transition hover:bg-primary hover:text-white"
+            >
+              {showOlder ? 'Sakrij starije vijesti' : 'Starije vijesti'}
+              <ChevronDown size={16} className={`transition-transform ${showOlder ? 'rotate-180' : ''}`} />
+            </button>
+
+            {showOlder && (
+              <div className="animate-fade-up mt-8 grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+                {older.map((post, i) => (
+                  <Link key={post.slug} to={`/novosti/${post.slug}`} className="group block overflow-hidden rounded-2xl border border-black/5 bg-white transition hover:-translate-y-1 hover:shadow-md">
+                    <div className="aspect-[16/10] overflow-hidden">
+                      <img loading="lazy" decoding="async" src={post.image} alt={post.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-display font-semibold leading-snug text-ink">{post.title}</h3>
+                      <span className="mt-3 flex items-center gap-1.5 text-sm font-medium" style={{ color: swatches[(i + 4) % swatches.length] }}>
+                        Čitaj dalje <ArrowRight size={14} />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </>
   )
