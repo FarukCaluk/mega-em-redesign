@@ -1,12 +1,9 @@
-import { useState, type FormEvent } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, GraduationCap, Mail, Phone, User, Users, BookOpen } from 'lucide-react'
+import { GraduationCap, Mail, Phone, User, Users, BookOpen } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
+import Field, { inputClass } from '../components/Field'
+import FormCard from '../components/FormCard'
 
-const inputClass = 'w-full rounded-xl border border-black/10 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-primary'
-const iconClass = 'pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted'
-const TARGET = 'trening.centar@mega-em.com'
 const courses = ['Priprema površine', 'Lakiranje', 'Koloristika', 'Poliranje']
 
 // ponytail: dodaj slike u ovaj niz kako prezentacije budu gotove
@@ -15,29 +12,7 @@ const photos = [
   { src: '/images/trening-centar/trening-centar-gosti.webp', alt: 'Gosti na otvorenju edukacijskog centra' },
 ]
 
-const empty = { firstName: '', lastName: '', email: '', phone: '', participants: '', course: '', description: '' }
-
 export default function EdukacijskiCentar() {
-  const [form, setForm] = useState(empty)
-  const [submitted, setSubmitted] = useState(false)
-  const set = (k: keyof typeof empty) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value })
-
-  function submit(e: FormEvent) {
-    e.preventDefault()
-    const body = [
-      `Ime: ${form.firstName}`,
-      `Prezime: ${form.lastName}`,
-      `Email: ${form.email}`,
-      `Kontakt: ${form.phone}`,
-      `Broj učesnika: ${form.participants}`,
-      `Edukacija: ${form.course}`,
-      '',
-      form.description,
-    ].join('\n')
-    window.location.href = `mailto:${TARGET}?subject=${encodeURIComponent(`Upit za edukaciju: ${form.course}`)}&body=${encodeURIComponent(body)}`
-    setSubmitted(true)
-  }
-
   return (
     <>
       <PageIntro
@@ -59,69 +34,31 @@ export default function EdukacijskiCentar() {
         </Reveal>
 
         <Reveal className="mx-auto mt-14 max-w-2xl">
-          <div className="rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] to-primary-light/[0.02] p-6 sm:p-8">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white">
-                <GraduationCap size={20} />
-              </span>
-              <h2 className="font-display text-lg font-semibold text-ink">Popunite formular</h2>
+          <FormCard
+            title="Popunite formular"
+            icon={GraduationCap}
+            subject="Upit za edukaciju — Mega-Em"
+            success="Bićete obaviješteni putem maila da li vam je primljena rezervacija."
+            submitLabel="Pošalji upit"
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field icon={User} name="Ime" required placeholder="Ime" />
+              <Field icon={User} name="Prezime" required placeholder="Prezime" />
             </div>
-
-            <AnimatePresence mode="wait">
-              {!submitted ? (
-                <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={submit} className="mt-7 space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="relative">
-                      <User size={16} className={iconClass} />
-                      <input required placeholder="Ime" value={form.firstName} onChange={set('firstName')} className={inputClass} />
-                    </div>
-                    <div className="relative">
-                      <User size={16} className={iconClass} />
-                      <input required placeholder="Prezime" value={form.lastName} onChange={set('lastName')} className={inputClass} />
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <Mail size={16} className={iconClass} />
-                    <input required type="email" placeholder="Email" value={form.email} onChange={set('email')} className={inputClass} />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="relative">
-                      <Phone size={16} className={iconClass} />
-                      <input required placeholder="Kontakt" value={form.phone} onChange={set('phone')} className={inputClass} />
-                    </div>
-                    <div className="relative">
-                      <Users size={16} className={iconClass} />
-                      <input required type="number" min={1} placeholder="Broj učesnika" value={form.participants} onChange={set('participants')} className={inputClass} />
-                    </div>
-                  </div>
-                  <div className="relative">
-                    <BookOpen size={16} className={iconClass} />
-                    <select required value={form.course} onChange={set('course')} className={`${inputClass} appearance-none ${form.course ? '' : 'text-muted'}`}>
-                      <option value="" disabled>Odaberite edukaciju</option>
-                      {courses.map((c) => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                  </div>
-                  <textarea rows={4} placeholder="Opis" value={form.description} onChange={set('description')} className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" />
-                  <button type="submit" className="w-full rounded-full bg-primary py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/25 active:translate-y-0">
-                    Pošalji upit
-                  </button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-7 flex flex-col items-center gap-4 rounded-2xl bg-white p-10 text-center ring-1 ring-black/5"
-                >
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <CheckCircle2 size={30} />
-                  </span>
-                  <p className="text-lg font-semibold text-ink">Bićete obaviješteni putem maila da li vam je primljena rezervacija.</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+            <Field icon={Mail} name="Email" type="email" required placeholder="Email" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field icon={Phone} name="Kontakt" required placeholder="Kontakt" />
+              <Field icon={Users} name="Broj učesnika" type="number" min={1} required placeholder="Broj učesnika" />
+            </div>
+            <div className="relative">
+              <BookOpen size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+              <select name="Edukacija" required defaultValue="" className={`${inputClass} appearance-none`}>
+                <option value="" disabled>Odaberite edukaciju</option>
+                {courses.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <textarea name="Opis" rows={4} placeholder="Opis" className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" />
+          </FormCard>
         </Reveal>
 
         <Reveal className="mt-16">

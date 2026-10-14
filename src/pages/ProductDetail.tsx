@@ -1,5 +1,5 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Boxes, Factory, Truck } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { products, productCategoryList } from '../data/products'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
@@ -12,6 +12,15 @@ export default function ProductDetail() {
   if (!product) return <Navigate to="/proizvodi" replace />
 
   const color = swatches[productCategoryList.indexOf(product.category) % swatches.length]
+  const fields: [string, string | undefined][] = [
+    ['Naziv Mega-Em', product.name],
+    ['Kategorija', product.category],
+    ['Naziv dobavljača', product.supplierName],
+    ['Šifra dobavljača', product.supplierCode],
+    ['Proizvođač', product.manufacturer ?? product.brand],
+    ['Broj komada u paketu', product.packSize],
+    ['Online šifra', product.onlineCode],
+  ]
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
   return (
@@ -45,20 +54,14 @@ export default function ProductDetail() {
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink">{product.name}</h2>
             <p className="mt-4 text-lg leading-relaxed text-muted">{product.description}</p>
 
-            <div className="mt-8 grid gap-4 rounded-2xl border border-black/5 bg-surface p-6 sm:grid-cols-3">
-              <div>
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Boxes size={13} /> Kategorija</p>
-                <p className="mt-1.5 font-semibold text-ink">{product.category}</p>
-              </div>
-              <div>
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Truck size={13} /> Naziv dobavljača</p>
-                <p className="mt-1.5 font-semibold text-ink">{product.supplierName ?? '—'}</p>
-              </div>
-              <div>
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted"><Factory size={13} /> Proizvođač</p>
-                <p className="mt-1.5 font-semibold text-ink">{product.manufacturer ?? product.brand}</p>
-              </div>
-            </div>
+            <dl className="mt-8 grid gap-x-6 gap-y-5 rounded-2xl border border-black/5 bg-surface p-6 sm:grid-cols-2">
+              {fields.map(([label, value]) => (
+                <div key={label}>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</dt>
+                  <dd className="mt-1.5 font-semibold text-ink">{value || '—'}</dd>
+                </div>
+              ))}
+            </dl>
           </Reveal>
         </div>
 

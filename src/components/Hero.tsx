@@ -1,19 +1,10 @@
 import { useState, type FormEvent } from 'react'
-import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { stats } from '../data/content'
 import Counter from './Counter'
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
-}
-
-const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
-}
+const delay = (i: number) => ({ animationDelay: `${i * 100}ms` })
 
 export default function Hero() {
   const navigate = useNavigate()
@@ -26,17 +17,17 @@ export default function Hero() {
 
   return (
     <section className="grain relative overflow-hidden bg-ink text-white">
-      {/* zamućena pozadina: kompanija + edukacijski centar */}
-      <div className="pointer-events-none absolute inset-0 grid grid-cols-2" aria-hidden>
-        <img src="/images/team/tim-mega-em-bg.webp" alt="" className="h-full w-full scale-105 object-cover blur-[3px]" />
-        <img src="/images/trening-centar/trening-centar-tim-bg.webp" alt="" className="h-full w-full scale-105 object-cover blur-[3px]" />
+      {/* zamućena pozadina: kompanija + edukacijski centar (na telefonu samo jedna slika) */}
+      <div className="pointer-events-none absolute inset-0 grid sm:grid-cols-2" aria-hidden>
+        <img src="/images/trening-centar/trening-centar-tim-bg.webp" width="493" height="590" alt="" fetchPriority="high" decoding="async" className="h-full w-full scale-105 object-cover blur-[3px]" />
+        <img src="/images/team/tim-mega-em-bg.webp" width="960" height="444" alt="" decoding="async" className="hidden h-full w-full scale-105 object-cover blur-[3px] sm:block" />
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink" />
-      <div className="pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] rounded-full bg-primary/30 blur-[120px]" />
-      <div className="pointer-events-none absolute right-0 top-1/3 h-[420px] w-[420px] rounded-full bg-primary-light/20 blur-[100px]" />
+      <div className="pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] bg-[radial-gradient(closest-side,rgb(130_9_155/0.35),transparent)]" />
+      <div className="pointer-events-none absolute right-0 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(closest-side,rgb(161_60_176/0.25),transparent)]" />
 
-      <motion.div variants={container} initial="hidden" animate="show" className="relative mx-auto max-w-3xl px-6 pb-14 pt-28 text-center sm:pt-32 lg:pb-16">
-        <motion.form variants={item} onSubmit={search} className="glass-dark relative flex items-center rounded-full p-1.5">
+      <div className="relative mx-auto max-w-3xl px-6 pb-14 pt-28 text-center sm:pt-32 lg:pb-16">
+        <form onSubmit={search} style={delay(0)} className="glass-dark animate-fade-up relative flex items-center rounded-full p-1.5">
           <Search size={20} className="pointer-events-none absolute left-5 text-white/60" />
           <input
             value={q}
@@ -48,20 +39,20 @@ export default function Hero() {
           <button type="submit" className="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
             Traži
           </button>
-        </motion.form>
+        </form>
 
-        <motion.h1 variants={item} className="mt-12 text-5xl font-semibold leading-[1.05] md:text-7xl">
+        <h1 style={delay(1)} className="animate-fade-up mt-12 text-5xl font-semibold leading-[1.05] md:text-7xl">
           Vaš partner
           <br />
           <span className="bg-gradient-to-r from-primary-light to-primary bg-clip-text text-transparent">od povjerenja</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p variants={item} className="mx-auto mt-5 max-w-xl text-lg text-white/70">
+        <p style={delay(2)} className="animate-fade-up mx-auto mt-5 max-w-xl text-lg text-white/70">
           Autoreparatura i industrijski premazi, distribucija aditiva za fasadne i građevinske
-          sisteme, boje, lakovi i alati.
-        </motion.p>
+          sisteme, boje i lakovi.
+        </p>
 
-        <motion.div variants={item} className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+        <div style={delay(3)} className="animate-fade-up mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
           {stats.map((s) => (
             <div key={s.label}>
               <div className="font-display text-2xl font-semibold sm:text-3xl">
@@ -70,8 +61,8 @@ export default function Hero() {
               <div className="mt-1 text-xs text-white/60 sm:text-sm">{s.label}</div>
             </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }

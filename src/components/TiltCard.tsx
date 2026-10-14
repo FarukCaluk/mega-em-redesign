@@ -1,16 +1,12 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { motion } from 'framer-motion'
 
 export default function TiltCard({ children, glow, className = '', style }: { children: ReactNode; glow: string; className?: string; style?: CSSProperties }) {
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    <div
       style={{ '--glow': glow, '--glow-shadow': `${glow}33`, ...style } as CSSProperties}
-      className={`group/tilt h-full rounded-2xl border border-black/5 bg-white transition-shadow duration-300 hover:shadow-[0_16px_32px_-18px_var(--glow-shadow)] ${className}`}
+      className={`group/tilt h-full rounded-2xl border border-black/5 bg-white transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_var(--glow-shadow)] active:scale-[0.97] ${className}`}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

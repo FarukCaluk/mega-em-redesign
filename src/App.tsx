@@ -12,6 +12,7 @@ const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Novosti = lazy(() => import('./pages/Novosti'))
 const NovostiDetail = lazy(() => import('./pages/NovostiDetail'))
 const EdukacijskiCentar = lazy(() => import('./pages/EdukacijskiCentar'))
+const Karijera = lazy(() => import('./pages/Karijera'))
 const Contact = lazy(() => import('./pages/Contact'))
 
 function ScrollToTop() {
@@ -58,6 +59,7 @@ export default function App() {
           <Route path="/novosti/:slug" element={<NovostiDetail />} />
           <Route path="/edukacijski-centar" element={<EdukacijskiCentar />} />
           <Route path="/trening-centar" element={<Navigate to="/edukacijski-centar" replace />} />
+          <Route path="/karijera" element={<Karijera />} />
           <Route path="/kontakt" element={<Contact />} />
         </Route>
       </Routes>

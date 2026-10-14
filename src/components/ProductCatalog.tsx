@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X, PackageSearch, SlidersHorizontal, ArrowRight } from 'lucide-react'
 import { products, productCategoryList, productBrandList, productIntro } from '../data/products'
 import { brandByName } from '../data/brands'
@@ -113,22 +112,15 @@ export default function ProductCatalog() {
           </button>
         </div>
 
-        <AnimatePresence>
-          {filtersOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden lg:hidden"
-            >
-              <div className="mt-4 rounded-2xl border border-black/5 bg-surface p-6">{filterPanel}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {filtersOpen && (
+          <div className="animate-fade-up mt-4 lg:hidden">
+            <div className="rounded-2xl border border-black/5 bg-surface p-6">{filterPanel}</div>
+          </div>
+        )}
 
         {brandInfo && (
           <div className="mt-5 flex gap-5 rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] to-primary-light/[0.02] p-6">
-            {brandInfo.logo && <img loading="lazy" decoding="async" src={brandInfo.logo} alt={brandInfo.name} className="hidden h-12 w-auto max-w-[120px] shrink-0 object-contain sm:block" />}
+            {brandInfo.logo && <img loading="lazy" decoding="async" src={brandInfo.logo} alt={brandInfo.name} className="hidden h-16 w-auto max-w-[160px] shrink-0 rounded-lg bg-white object-contain p-2 sm:block" />}
             <div>
               <h2 className="font-display text-xl font-semibold text-ink">{brandInfo.name}</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted">{brandInfo.long ?? brandInfo.intro ?? 'Opis brenda uskoro.'}</p>

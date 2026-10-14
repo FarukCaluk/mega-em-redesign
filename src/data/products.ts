@@ -9,6 +9,9 @@ export interface Product {
   intro?: string
   supplierName?: string
   manufacturer?: string
+  supplierCode?: string
+  packSize?: string
+  onlineCode?: string
   variants?: { name: string; pack: string; code: string }[]
 }
 

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, Send, Briefcase, Check } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
@@ -72,9 +73,9 @@ export default function Contact() {
             Naša jedinstvenost, raznolikost i dinamika poslovanja zahtjeva stručne kadrove različitih
             profila te pruža priliku ambicioznim radnicima željnim znanja i uspjeha. Mi slušamo vaše ideje!
           </p>
-          <a href="mailto:office@mega-em.com?subject=Prijava%20za%20posao" className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold transition hover:-translate-y-0.5 hover:bg-primary-light hover:shadow-lg hover:shadow-primary/25">
-            Pošalji biografiju <Send size={16} />
-          </a>
+          <Link to="/karijera" className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold transition hover:-translate-y-0.5 hover:bg-primary-light hover:shadow-lg hover:shadow-primary/25">
+            Prijavi se <Send size={16} />
+          </Link>
         </Reveal>
       </section>
     </>

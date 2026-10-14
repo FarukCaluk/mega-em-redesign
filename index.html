@@ -4,11 +4,36 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1c1424" />
     <meta name="description" content="Mega-Em d.o.o. — visoko specijalizovani distributer hemikalija, autoreparaturnih materijala i alata u Bosni i Hercegovini." />
     <title>Mega-Em d.o.o. — Vaš partner od povjerenja</title>
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/sg-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      /* početni prikaz prije učitavanja aplikacije */
+      #root:empty,
+      #splash { min-height: 100vh; background: #1c1424; }
+      #splash { display: flex; align-items: center; justify-content: center; }
+      #splash img { width: 150px; height: auto; opacity: 0.9; }
+    </style>
+    <script>
+      // hero slike na početnoj otkrivamo odmah, ne tek nakon JS-a
+      if (location.pathname === '/') {
+        var imgs = ['trening-centar/trening-centar-tim-bg.webp'];
+        if (matchMedia('(min-width:640px)').matches) imgs.push('team/tim-mega-em-bg.webp');
+        imgs.forEach(function (p) {
+          var l = document.createElement('link');
+          l.rel = 'preload';
+          l.as = 'image';
+          l.href = '/images/' + p;
+          l.fetchPriority = 'high';
+          document.head.appendChild(l);
+        });
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div id="splash"><img src="/images/logo.webp" width="300" height="80" alt="Mega-Em" style="filter:brightness(0) invert(1)" /></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
