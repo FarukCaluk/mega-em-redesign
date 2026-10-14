@@ -30,8 +30,8 @@ export default function Karijera() {
             <Field icon={Phone} name="Kontakt" required placeholder="Kontakt" />
             <Field icon={UserCheck} name="Pozicija" required placeholder="Pozicija na koju se prijavljujete" />
             <label className="block rounded-xl border border-dashed border-primary/30 bg-white p-4 text-sm text-muted">
-              <span className="mb-2 flex items-center gap-2 font-medium text-ink"><Paperclip size={16} /> CV (PDF, DOC, DOCX — do 5 MB)</span>
-              <input name="Prilog" type="file" accept=".pdf,.doc,.docx" className="w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
+              <span className="mb-2 flex items-center gap-2 font-medium text-ink"><Paperclip size={16} /> CV (PDF, DOC, DOCX — do 10 MB)</span>
+              <input name="attachment" type="file" accept=".pdf,.doc,.docx" onChange={(e) => e.target.setCustomValidity((e.target.files?.[0]?.size ?? 0) > 10 * 1024 * 1024 ? 'CV mora biti manji od 10 MB' : '')} className="w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
             </label>
           </FormCard>
         </Reveal>
