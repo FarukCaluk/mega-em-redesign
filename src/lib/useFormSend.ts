@@ -10,8 +10,8 @@ export function useFormSend(subject: string, to = TEST_EMAIL) {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
-    const file = fd.get('Prilog')
-    if (file instanceof File && file.size === 0) fd.delete('Prilog')
+    const file = fd.get('attachment')
+    if (file instanceof File && file.size === 0) fd.delete('attachment')
     fd.append('_subject', subject)
     fd.append('_captcha', 'false')
     fd.append('_template', 'table')
@@ -19,7 +19,9 @@ export function useFormSend(subject: string, to = TEST_EMAIL) {
     try {
       const r = await fetch(`https://formsubmit.co/ajax/${to}`, { method: 'POST', headers: { Accept: 'application/json' }, body: fd })
       const d = await r.json()
-      setStatus(r.ok && String(d.success) !== 'false' ? 'done' : 'error')
+      const ok = r.ok && String(d.success) !== 'false'
+      if (!ok) console.warn('FormSubmit:', d.message)
+      setStatus(ok ? 'done' : 'error')
     } catch {
       setStatus('error')
     }

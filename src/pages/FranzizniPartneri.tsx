@@ -27,8 +27,17 @@ export default function FranzizniPartneri() {
                   <div className="p-6">
                     <h3 className="text-lg font-bold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{f.name}</h3>
                     <ul className="mt-4 space-y-2.5 text-sm text-muted">
-                      <li className="flex gap-2.5"><MapPin size={16} className="mt-0.5 shrink-0" /> <span><b className="font-medium text-ink">{f.city}</b>{f.address && <>, {f.address}</>}</span></li>
-                      {f.phone && <li className="flex gap-2.5"><Phone size={16} className="mt-0.5 shrink-0" /><a href={`tel:${f.phone.replace(/\D/g, '')}`} className="hover:underline">{f.phone}</a></li>}
+                      <li className="flex gap-2.5"><MapPin size={16} className="mt-0.5 shrink-0" /> <span><b className="font-medium text-ink">{f.city}</b>{f.address && <>, {f.address.replace(`, ${f.city}`, '')}</>}</span></li>
+                      {f.phone && (
+                        <li className="flex gap-2.5">
+                          <Phone size={16} className="mt-0.5 shrink-0" />
+                          <span>
+                            {f.phone.split(', ').map((p, k) => (
+                              <span key={p}>{k > 0 && ' · '}<a href={`tel:${p.replace(/\D/g, '')}`} className="hover:underline">{p}</a></span>
+                            ))}
+                          </span>
+                        </li>
+                      )}
                       {f.email && <li className="flex gap-2.5"><Mail size={16} className="mt-0.5 shrink-0" /><a href={`mailto:${f.email}`} className="min-w-0 truncate hover:underline">{f.email}</a></li>}
                       {f.hours && <li className="flex gap-2.5"><Clock size={16} className="mt-0.5 shrink-0" /><div>{f.hours.map((h) => <div key={h}>{h}</div>)}</div></li>}
                     </ul>
