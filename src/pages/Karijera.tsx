@@ -21,6 +21,7 @@ export default function Karijera() {
             subject="Prijava za posao — Mega-Em"
             success="Hvala! Vaša prijava je poslana, javit ćemo vam se."
             submitLabel="Pošalji prijavu"
+            native
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <Field icon={User} name="Ime" required placeholder="Ime" />

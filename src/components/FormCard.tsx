@@ -1,16 +1,22 @@
 import type { ReactNode } from 'react'
 import { CheckCircle2, type LucideIcon } from 'lucide-react'
-import { useFormSend } from '../lib/useFormSend'
+import { useFormSend, TEST_EMAIL } from '../lib/useFormSend'
 
-export default function FormCard({ title, icon: Icon, subject, success, submitLabel, children }: {
+// native: običan POST (potreban za priloge, FormSubmit ih ne prima preko AJAX-a); nakon slanja vraća na ?poslano=1
+export default function FormCard({ title, icon: Icon, subject, success, submitLabel, native, children }: {
   title: string
   icon: LucideIcon
   subject: string
   success: string
   submitLabel: string
+  native?: boolean
   children: ReactNode
 }) {
   const { status, onSubmit } = useFormSend(subject)
+  const done = native ? window.location.search.includes('poslano=1') : status === 'done'
+  const formProps = native
+    ? { action: `https://formsubmit.co/${TEST_EMAIL}`, method: 'POST', encType: 'multipart/form-data' }
+    : { onSubmit }
 
   return (
     <div className="rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] to-primary-light/[0.02] p-6 sm:p-8">
@@ -21,8 +27,16 @@ export default function FormCard({ title, icon: Icon, subject, success, submitLa
         <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>
       </div>
 
-        {status !== 'done' ? (
-          <form onSubmit={onSubmit} className="animate-scale-in mt-7 space-y-4">
+        {!done ? (
+          <form {...formProps} className="animate-scale-in mt-7 space-y-4">
+            {native && (
+              <>
+                <input type="hidden" name="_subject" value={subject} />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_next" value={`${window.location.origin}${window.location.pathname}?poslano=1`} />
+              </>
+            )}
             {children}
             {status === 'error' && (
               <p className="text-sm text-red-600">Slanje nije uspjelo. Pokušajte ponovo ili nam pišite na office@mega-em.com.</p>
