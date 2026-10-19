@@ -25,5 +25,5 @@ export const franchises: Franchise[] = [
   { slug: 'gradiska', city: 'Gradiška', name: 'Gradiška' },
   { slug: 'bijeljina', city: 'Bijeljina', name: 'Bijeljina' },
   { slug: 'cazin', city: 'Cazin', name: 'Mega Color Cazin', phone: '060/350-5091', email: 'megacolorcazin@gmail.com', hours: ['Pon–sub 08:00–17:00'], image: '/images/franchises/cazin.webp' },
-  { slug: 'ljubuski', city: 'Ljubuški', name: 'Ljubuški' },
+  { slug: 'ljubuski', city: 'Ljubuški', name: 'Mega Color d.o.o. Ljubuški', address: 'Ul. Nikole Kordića 64 (na zaobilaznici)', phone: '063/092-007', email: 'megacolor024@gmail.com' },
 ]

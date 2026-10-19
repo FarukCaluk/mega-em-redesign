@@ -1,4 +1,4 @@
-import { GraduationCap, Mail, Phone, User, Users, BookOpen } from 'lucide-react'
+import { GraduationCap, Mail, Phone, User, Users, BookOpen, Wrench, Presentation, Cpu } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
 import Field, { inputClass } from '../components/Field'
@@ -6,10 +6,22 @@ import FormCard from '../components/FormCard'
 
 const courses = ['Priprema površine', 'Lakiranje', 'Koloristika', 'Poliranje']
 
+const highlights = [
+  { icon: Wrench, title: 'Stručno vođene edukacije', text: 'Znanje od ljudi koji se ovim poslom bave svaki dan.' },
+  { icon: Presentation, title: 'Praktične demonstracije', text: 'Rad uživo, korak po korak, na stvarnim primjerima.' },
+  { icon: Cpu, title: 'Savremena oprema', text: 'Nove tehnologije i alati dostupni polaznicima.' },
+]
+
 // ponytail: dodaj slike u ovaj niz kako prezentacije budu gotove
 const photos = [
   { src: '/images/trening-centar/trening-centar-ulaz.webp', alt: 'Ulaz u Mega-Em edukacijski centar' },
   { src: '/images/trening-centar/trening-centar-gosti.webp', alt: 'Gosti na otvorenju edukacijskog centra' },
+  { src: '/images/trening-centar/edu-1.webp', alt: 'Polaznici edukacije o auto detailingu sa certifikatima' },
+  { src: '/images/trening-centar/edu-2.webp', alt: 'Polaznici sa certifikatima i poklon vrećicama' },
+  { src: '/images/trening-centar/edu-3.webp', alt: 'Grupa polaznika sa certifikatima u edukacijskom centru' },
+  { src: '/images/trening-centar/edu-4.webp', alt: 'Praktični rad u lakirnici' },
+  { src: '/images/trening-centar/edu-5.webp', alt: 'Demonstracija pripreme površine u lakirnici' },
+  { src: '/images/trening-centar/edu-6.webp', alt: 'Demonstracija koloristike na haubi vozila' },
 ]
 
 export default function EdukacijskiCentar() {
@@ -23,17 +35,45 @@ export default function EdukacijskiCentar() {
 
       <section className="mx-auto max-w-6xl px-6 py-20">
         <Reveal className="mx-auto max-w-3xl text-center">
-          {/* ponytail: uvodne rečenice o edukacijskom centru stižu od klijenta */}
-          <p className="text-muted">Ovdje dolazi nekoliko uvodnih rečenica o edukacijskom centru Mega-Em.</p>
+          <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">Znanje, praksa i profesionalni razvoj na jednom mjestu</h2>
+          <p className="mt-5 leading-relaxed text-muted">
+            Edukacijski centar Mega-Em osmišljen je kao mjesto za usavršavanje znanja i praktičnih vještina u oblasti autoreparature, lakiranja i profesionalnog održavanja vozila.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            Kroz stručno vođene edukacije, praktične demonstracije i rad sa savremenom opremom, polaznicima pružamo priliku da unaprijede postojeće vještine, upoznaju nove tehnologije i steknu znanja primjenjiva u svakodnevnom radu.
+          </p>
         </Reveal>
 
-        <Reveal className="mt-10">
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          {highlights.map((h, i) => (
+            <Reveal key={h.title} delay={i * 80} className="h-full">
+              <div className="h-full rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] to-primary-light/[0.02] p-6 text-center">
+                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
+                  <h.icon size={22} />
+                </span>
+                <h3 className="mt-4 font-display font-semibold text-ink">{h.title}</h3>
+                <p className="mt-1.5 text-sm text-muted">{h.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mx-auto mt-6 max-w-3xl">
+          <p className="rounded-2xl bg-surface px-6 py-4 text-center text-sm text-muted ring-1 ring-black/5">
+            Edukacije su prilagođene kako početnicima koji žele steći osnovna znanja, tako i profesionalcima koji žele dodatno unaprijediti svoje vještine i radne procese.
+          </p>
+        </Reveal>
+
+        <Reveal className="mt-12">
           <div className="mx-auto aspect-[16/7] max-w-4xl overflow-hidden rounded-3xl shadow-xl shadow-primary/10">
             <img loading="lazy" decoding="async" src="/images/trening-centar/trening-centar-tim.png" alt="Mega-Em edukacijski centar" className="h-full w-full object-cover" />
           </div>
         </Reveal>
 
-        <Reveal className="mx-auto mt-14 max-w-2xl">
+        <Reveal className="mx-auto mt-16 max-w-2xl">
+          <p className="mb-6 text-center font-display text-lg font-semibold text-ink">
+            Rezervišite svoj termin i investirajte u znanje koje donosi rezultate.
+          </p>
           <FormCard
             title="Popunite formular"
             icon={GraduationCap}
@@ -60,16 +100,25 @@ export default function EdukacijskiCentar() {
             <textarea name="Opis" rows={4} placeholder="Opis" className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" />
           </FormCard>
         </Reveal>
+      </section>
 
-        <Reveal className="mt-16">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {photos.map((img) => (
-              <div key={img.src} className="aspect-[4/3] overflow-hidden rounded-2xl">
-                <img loading="lazy" decoding="async" src={img.src} alt={img.alt} className="h-full w-full object-cover transition duration-500 hover:scale-105" />
-              </div>
-            ))}
-          </div>
-        </Reveal>
+      {/* fotografije se vrte u petlji; pauza na hover */}
+      <section className="overflow-hidden pb-24 [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
+        <div className="flex w-max animate-[marquee_60s_linear_infinite] gap-4 pr-4 hover:[animation-play-state:paused] motion-reduce:animate-none">
+          {[...photos, ...photos].map((img, i) => (
+            <img
+              key={i}
+              loading="lazy"
+              decoding="async"
+              src={img.src}
+              alt={i < photos.length ? img.alt : ''}
+              aria-hidden={i >= photos.length}
+              width={480}
+              height={300}
+              className="h-56 w-[19rem] shrink-0 rounded-2xl object-cover sm:h-64 sm:w-[24rem]"
+            />
+          ))}
+        </div>
       </section>
     </>
   )
