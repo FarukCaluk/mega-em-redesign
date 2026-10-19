@@ -56,13 +56,13 @@ export default function Team() {
                         <h3 className="mt-4 font-bold text-ink">{p.name}</h3>
                         <p className="mt-1 text-sm text-muted">{p.role}</p>
                         {p.phone && (
-                          <a href={`tel:${p.phone.replace(/\D/g, '')}`} className="mt-3 flex items-center justify-center gap-1.5 text-xs" style={{ color }}>
+                          <a href={`tel:${p.phone.replace(/[^\d+]/g, '')}`} className="mt-3 flex items-center justify-center gap-1.5 text-xs" style={{ color }}>
                             <Phone size={12} className="shrink-0" /> {p.phone}
                           </a>
                         )}
                         {p.email && (
                           <a href={`mailto:${p.email}`} className="mt-2 flex items-center justify-center gap-1.5 text-xs" style={{ color }}>
-                            <Mail size={12} className="shrink-0" /> <span className="min-w-0 truncate">{p.email}</span>
+                            <Mail size={12} className="shrink-0" /> <span className="min-w-0 break-all">{p.email}</span>
                           </a>
                         )}
                       </div>

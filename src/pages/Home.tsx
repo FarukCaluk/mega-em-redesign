@@ -7,11 +7,10 @@ import Reveal from '../components/Reveal'
 import Hero from '../components/Hero'
 import TiltCard from '../components/TiltCard'
 
-// ponytail: tekst i slika za svaki stub stižu od klijenta — dodaj `image` kad bude gotova
 const pillars: { title: string; desc: string; icon: typeof Car; image?: string }[] = [
-  { title: 'Autoreparatura', desc: 'Boje i lakovi, kitovi, primeri, abrazivi, alati i oprema za profesionalnu autoreparaturu.', icon: Car },
-  { title: 'Sistemi za antikorozivnu zaštitu', desc: 'Premazi i sistemi za zaštitu metalnih površina od korozije u industriji i građevinarstvu.', icon: ShieldCheck },
-  { title: 'Aditivi za građevinsku hemiju', desc: 'Sirovine i aditivi za proizvodnju fasadnih sistema i građevinskih materijala.', icon: FlaskConical },
+  { title: 'Autoreparatura', desc: 'Boje i lakovi, kitovi, primeri, abrazivi, alati i oprema za profesionalnu autoreparaturu.', icon: Car, image: '/images/pillars/autoreparatura.webp' },
+  { title: 'Sistemi za antikorozivnu zaštitu', desc: 'Premazi i sistemi za zaštitu metalnih površina od korozije u industriji i građevinarstvu.', icon: ShieldCheck, image: '/images/pillars/antikorozivna-zastita.webp' },
+  { title: 'Aditivi za građevinsku hemiju', desc: 'Sirovine i aditivi za proizvodnju fasadnih sistema i građevinskih materijala.', icon: FlaskConical, image: '/images/pillars/gradjevinska-hemija.webp' },
 ]
 
 const features = [
