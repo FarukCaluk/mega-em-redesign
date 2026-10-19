@@ -64,12 +64,6 @@ export default function EdukacijskiCentar() {
           </p>
         </Reveal>
 
-        <Reveal className="mt-12">
-          <div className="mx-auto aspect-[16/7] max-w-4xl overflow-hidden rounded-3xl shadow-xl shadow-primary/10">
-            <img loading="lazy" decoding="async" src="/images/trening-centar/trening-centar-tim.png" alt="Mega-Em edukacijski centar" className="h-full w-full object-cover" />
-          </div>
-        </Reveal>
-
         <Reveal className="mx-auto mt-16 max-w-2xl">
           <p className="mb-6 text-center font-display text-lg font-semibold text-ink">
             Rezervišite svoj termin i investirajte u znanje koje donosi rezultate.
