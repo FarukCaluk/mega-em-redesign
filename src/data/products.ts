@@ -30,6 +30,7 @@ export const products: Product[] = [
     supplierName: 'Dobavljač (test)',
     supplierCode: 'SD-0001 (test)',
     manufacturer: 'NR',
+    image: '/images/products/nr-krep-traka-orange-90.webp',
     variants: [
       { name: 'NR Traka 90°C Orange 19mm x 45m', pack: '72', code: 'AR001' },
       { name: 'NR Traka 90°C Orange 25mm x 45m', pack: '64', code: 'AR002' },
