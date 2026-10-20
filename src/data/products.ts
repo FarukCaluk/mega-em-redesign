@@ -20,6 +20,24 @@ export const productIntro = (p: Product) => p.intro ?? p.description.split(/(?<=
 // izvučeno iz stvarnog kataloga (Katalog-Autoreparatura) — realan presjek asortimana
 export const products: Product[] = [
   {
+    id: 'nr-krep-traka-orange-90',
+    name: 'NR Krep traka Orange 90°C',
+    brand: 'NR',
+    category: 'Zaštitna oprema i potrošni materijal',
+    sku: 'NR-KREP-ORANGE-90',
+    description: 'Krep traka za maskiranje otporna na temperaturu do 90°C, namijenjena zaštiti površina pri lakiranju. Dostupna u više širina.',
+    // ponytail: testni primjer rasporeda; dobavljač, šifra i proizvođač su privremeni
+    supplierName: 'Dobavljač (test)',
+    supplierCode: 'SD-0001 (test)',
+    manufacturer: 'NR',
+    variants: [
+      { name: 'NR Traka 90°C Orange 19mm x 45m', pack: '72', code: 'AR001' },
+      { name: 'NR Traka 90°C Orange 25mm x 45m', pack: '64', code: 'AR002' },
+      { name: 'NR Traka 90°C Orange 38mm x 45m', pack: '48', code: 'AR003' },
+      { name: 'NR Traka 90°C Orange 50mm x 45m', pack: '36', code: 'AR004' },
+    ],
+  },
+  {
     id: 'mipa-px9',
     name: 'MIPA PX9',
     brand: 'MIPA',
