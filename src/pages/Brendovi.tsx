@@ -30,7 +30,7 @@ export default function Brendovi() {
                         )}
                       </div>
                       <h3 className="mt-5 font-display text-lg font-semibold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{b.name}</h3>
-                      <p className="mt-2 line-clamp-6 flex-1 text-sm text-muted">{b.intro ?? 'Brend iz Mega-Em asortimana. Opis brenda uskoro.'}</p>
+                      <p className="mt-2 line-clamp-7 flex-1 text-sm text-muted">{b.intro ?? 'Brend iz Mega-Em asortimana. Opis brenda uskoro.'}</p>
                       <span className="mt-4 flex items-center gap-1.5 text-sm font-medium" style={{ color }}>
                         Pogledaj proizvode <ArrowRight size={14} />
                       </span>

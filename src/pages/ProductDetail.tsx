@@ -18,9 +18,8 @@ export default function ProductDetail() {
     ['Naziv dobavljača', product.supplierName],
     ['Šifra dobavljača', product.supplierCode],
     ['Proizvođač', product.manufacturer ?? product.brand],
-    ['Broj komada u paketu', product.packSize],
-    ['Online šifra', product.onlineCode],
   ]
+  const rows = product.variants ?? (product.packSize || product.onlineCode ? [{ name: product.name, pack: product.packSize ?? '', code: product.onlineCode ?? '' }] : [])
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
   return (
@@ -65,17 +64,17 @@ export default function ProductDetail() {
           </Reveal>
         </div>
 
-        {product.variants && product.variants.length > 0 && (
+        {rows.length > 0 && (
           <div className="mt-16">
-            <h3 className="font-display text-xl font-semibold text-ink">Dostupne varijante</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">{product.variants ? 'Dostupne varijante' : 'Pakovanje'}</h3>
             <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
-              <table className="w-full min-w-[420px] text-left text-sm">
+              <table className="w-full min-w-[460px] text-left text-sm">
                 <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
-                  <tr><th className="px-5 py-3">Naziv</th><th className="px-5 py-3">Komada u paketu</th><th className="px-5 py-3">Online šifra</th></tr>
+                  <tr><th className="px-5 py-3">Naziv</th><th className="px-5 py-3">Broj komada u paketu</th><th className="px-5 py-3">Online šifra</th></tr>
                 </thead>
                 <tbody className="divide-y divide-black/5">
-                  {product.variants.map((v) => (
-                    <tr key={v.code}><td className="px-5 py-3 font-medium text-ink">{v.name}</td><td className="px-5 py-3 text-muted">{v.pack}</td><td className="px-5 py-3 text-muted">{v.code}</td></tr>
+                  {rows.map((v, i) => (
+                    <tr key={i}><td className="px-5 py-3 font-medium text-ink">{v.name}</td><td className="px-5 py-3 text-muted">{v.pack || '—'}</td><td className="px-5 py-3 text-muted">{v.code || '—'}</td></tr>
                   ))}
                 </tbody>
               </table>
