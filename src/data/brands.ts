@@ -51,7 +51,6 @@ const list: [string, string?][] = [
   ['Rowis', 'rowis-logo.webp'],
   ['Troy', 'troy-logo.webp'],
   ['Loufakis'],
-  ['SIA', 'sia-logo.webp'],
 ]
 
 export const brands: Brand[] = list.map(([name, file]) => ({
