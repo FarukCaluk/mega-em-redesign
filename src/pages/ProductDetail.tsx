@@ -67,14 +67,14 @@ export default function ProductDetail() {
         {rows.length > 0 && (
           <div className="mt-16">
             <h3 className="font-display text-xl font-semibold text-ink">{product.variants ? 'Dostupne varijante' : 'Pakovanje'}</h3>
-            <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
-              <table className="w-full min-w-[460px] text-left text-sm">
+            <div className="mt-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
+              <table className="w-full text-left text-xs sm:text-sm">
                 <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
-                  <tr><th className="px-5 py-3">Naziv</th><th className="px-5 py-3">Broj komada u paketu</th><th className="px-5 py-3">Online šifra</th></tr>
+                  <tr><th className="px-3 py-3 sm:px-5">Naziv</th><th className="px-2 py-3 sm:px-5"><span className="sm:hidden">Kom. u pak.</span><span className="hidden sm:inline">Broj komada u paketu</span></th><th className="px-2 py-3 sm:px-5"><span className="sm:hidden">Šifra</span><span className="hidden sm:inline">Online šifra</span></th></tr>
                 </thead>
                 <tbody className="divide-y divide-black/5">
                   {rows.map((v, i) => (
-                    <tr key={i}><td className="px-5 py-3 font-medium text-ink">{v.name}</td><td className="px-5 py-3 text-muted">{v.pack || '—'}</td><td className="px-5 py-3 text-muted">{v.code || '—'}</td></tr>
+                    <tr key={i}><td className="px-3 py-3 font-medium text-ink sm:px-5">{v.name}</td><td className="px-2 py-3 text-muted sm:px-5">{v.pack || '—'}</td><td className="px-2 py-3 text-muted sm:px-5">{v.code || '—'}</td></tr>
                   ))}
                 </tbody>
               </table>
