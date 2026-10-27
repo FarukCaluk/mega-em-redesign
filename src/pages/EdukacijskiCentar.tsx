@@ -3,6 +3,7 @@ import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
 import Field, { inputClass } from '../components/Field'
 import FormCard from '../components/FormCard'
+import content from '../data/generated/content.json'
 
 const courses = ['Priprema površine', 'Lakiranje', 'Koloristika', 'Poliranje']
 
@@ -12,17 +13,8 @@ const highlights = [
   { icon: Cpu, title: 'Savremena oprema', text: 'Nove tehnologije i alati dostupni polaznicima.' },
 ]
 
-// ponytail: dodaj slike u ovaj niz kako prezentacije budu gotove
-const photos = [
-  { src: '/images/trening-centar/trening-centar-ulaz.webp', alt: 'Ulaz u Mega-Em edukacijski centar' },
-  { src: '/images/trening-centar/trening-centar-gosti.webp', alt: 'Gosti na otvorenju edukacijskog centra' },
-  { src: '/images/trening-centar/edu-1.webp', alt: 'Polaznici edukacije o auto detailingu sa certifikatima' },
-  { src: '/images/trening-centar/edu-2.webp', alt: 'Polaznici sa certifikatima i poklon vrećicama' },
-  { src: '/images/trening-centar/edu-3.webp', alt: 'Grupa polaznika sa certifikatima u edukacijskom centru' },
-  { src: '/images/trening-centar/edu-4.webp', alt: 'Praktični rad u lakirnici' },
-  { src: '/images/trening-centar/edu-5.webp', alt: 'Demonstracija pripreme površine u lakirnici' },
-  { src: '/images/trening-centar/edu-6.webp', alt: 'Demonstracija koloristike na haubi vozila' },
-]
+// fotografije dolaze iz Sanity CMS-a (Fotografije edukacijskog centra)
+const photos = content.education
 
 export default function EdukacijskiCentar() {
   return (
