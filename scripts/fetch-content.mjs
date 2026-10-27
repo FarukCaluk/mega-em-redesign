@@ -9,8 +9,8 @@ const DATASET = 'production'
 const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/data/generated/content.json')
 
 const query = `{
-  "products": *[_type == "product"] | order(name asc) {
-    "id": slug.current, name, "brand": coalesce(brand, ""), "category": coalesce(category, ""), "sku": coalesce(sku, ""),
+  "products": *[_type == "product" && hidden != true] | order(name asc) {
+    "id": slug.current, name, "brand": coalesce(brand, ""), "category": coalesce(category, ""), subcategory, "sku": coalesce(sku, ""),
     "description": coalesce(description, ""), "image": image.asset._ref, intro, supplierName, supplierCode, manufacturer,
     packSize, onlineCode, "variants": variants[]{name, pack, code}
   },
@@ -52,7 +52,14 @@ async function main() {
 
   const content = {
     products: r.products.map((p) =>
-      clean({...p, image: img(p.image, 700), variants: p.variants?.map((v) => clean({name: v.name, pack: v.pack ?? '', code: v.code ?? ''}))}),
+      // obavezna tekstualna polja ostaju (i prazna) da sajt ne puca na nedostajućim vrijednostima
+      ({
+        brand: '',
+        category: '',
+        sku: '',
+        description: '',
+        ...clean({...p, image: img(p.image, 700), variants: p.variants?.map((v) => clean({name: v.name, pack: v.pack ?? '', code: v.code ?? ''}))}),
+      }),
     ),
     news: r.news.map((n) => clean({...n, date: fmtDate(n.date), image: img(n.image, 1000), content: n.content ?? []})),
     brands: r.brands.map((b) => clean({name: b.name, logo: img(b.logo, 360), intro: b.intro, long: b.long})),

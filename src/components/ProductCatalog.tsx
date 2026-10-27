@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Search, X, PackageSearch, SlidersHorizontal, ArrowRight } from 'lucide-react'
-import { products, productCategoryList, productBrandList, productIntro } from '../data/products'
+import { products, productCategoryList, productBrandList, productSubcategoryList, subcategoriesOf, productIntro } from '../data/products'
 import { brandByName } from '../data/brands'
 import { swatches } from '../data/content'
 import TiltCard from './TiltCard'
@@ -41,6 +41,7 @@ export default function ProductCatalog() {
   const params = useSearchParams()[0]
   const [query, setQuery] = useState(params.get('q') ?? '')
   const [activeCategories, setActiveCategories] = useState<string[]>([])
+  const [activeSubs, setActiveSubs] = useState<string[]>([])
   const brandParam = params.get('brend')
   const [activeBrands, setActiveBrands] = useState<string[]>(() => {
     const b = brandByName(brandParam)
@@ -55,23 +56,27 @@ export default function ProductCatalog() {
     const q = query.trim().toLowerCase()
     return products.filter((p) => {
       if (activeCategories.length > 0 && !activeCategories.includes(p.category)) return false
+      if (activeSubs.length > 0 && !activeSubs.includes(p.subcategory ?? '')) return false
       if (activeBrands.length > 0 && !activeBrands.includes(p.brand)) return false
       if (!q) return true
-      return [p.name, p.brand, p.category, p.sku, p.description].some((field) => field.toLowerCase().includes(q))
+      return [p.name, p.brand, p.category, p.subcategory ?? '', p.sku, p.description].some((field) => field.toLowerCase().includes(q))
     })
-  }, [query, activeCategories, activeBrands])
+  }, [query, activeCategories, activeSubs, activeBrands])
 
   const brandInfo = activeBrands.length === 1 ? brandByName(activeBrands[0]) : undefined
-  const activeCount = activeCategories.length + activeBrands.length
+  const activeCount = activeCategories.length + activeSubs.length + activeBrands.length
+  const subOptions = activeCategories.length ? subcategoriesOf(activeCategories) : productSubcategoryList
 
   const filterPanel = (
     <div className="space-y-7">
       <FilterGroup title="Kategorija" options={productCategoryList} active={activeCategories} onToggle={(v) => toggle(activeCategories, setActiveCategories, v)} />
+      {subOptions.length > 0 && <FilterGroup title="Podkategorija" options={subOptions} active={activeSubs} onToggle={(v) => toggle(activeSubs, setActiveSubs, v)} />}
       <FilterGroup title="Brend" options={productBrandList} active={activeBrands} onToggle={(v) => toggle(activeBrands, setActiveBrands, v)} />
       {activeCount > 0 && (
         <button
           onClick={() => {
             setActiveCategories([])
+            setActiveSubs([])
             setActiveBrands([])
           }}
           className="text-sm font-medium text-primary hover:underline"
@@ -147,7 +152,7 @@ export default function ProductCatalog() {
                         ) : (
                           <div className="flex aspect-[4/3] items-center justify-center rounded-t-2xl" style={{ background: `${color}14` }}>
                             <span className="flex h-14 w-14 items-center justify-center rounded-xl text-sm font-bold uppercase text-white" style={{ background: color }}>
-                              {p.brand.slice(0, 2)}
+                              {(p.brand || p.name).slice(0, 2)}
                             </span>
                           </div>
                         )}

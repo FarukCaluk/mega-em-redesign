@@ -26,7 +26,8 @@
     "@types/react": "^19.2.14",
     "eslint": "^10.8.1",
     "prettier": "^3.5",
-    "typescript": "~6.0"
+    "typescript": "~6.0",
+    "xlsx": "^0.18.5"
   },
   "prettier": {
     "bracketSpacing": false,
