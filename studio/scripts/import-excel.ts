@@ -65,8 +65,8 @@ const docs = groups.map((g) => {
     slug: {_type: 'slug', current: slug},
     sku,
     brand: brandOf(s(h['Brend'])) || brandFromName(name),
-    category: s(h['Primarna kategorija']),
-    subcategory: fixSub(s(h['Sekundarna kategorija'])),
+    categoryTitle: s(h['Primarna kategorija']),
+    subcategoryTitle: fixSub(s(h['Sekundarna kategorija'])),
     supplierName: s(h['Dobavljač 1']),
     supplierCode: isGroup ? '' : s(h['Šifra dobavljača']),
     onlineCode: isGroup ? '' : s(h['Online šifra']),
@@ -81,9 +81,9 @@ const visible = docs.filter((d) => !d.hidden)
 console.log(`redova: ${rows.length}, artikala: ${docs.length}, vidljivo na sajtu: ${visible.length}, sakriveno: ${docs.length - visible.length}`)
 console.log(`grupa sa varijantama: ${docs.filter((d) => d.variants).length}`)
 const cats: Record<string, number> = {}
-visible.forEach((d) => (cats[d.category || '(bez kategorije)'] = (cats[d.category || '(bez kategorije)'] || 0) + 1))
+visible.forEach((d) => (cats[d.categoryTitle || '(bez kategorije)'] = (cats[d.categoryTitle || '(bez kategorije)'] || 0) + 1))
 console.log('kategorije (vidljivi):', JSON.stringify(cats))
-const bad = visible.filter((d) => !d.brand || !d.category)
+const bad = visible.filter((d) => !d.brand || !d.categoryTitle)
 console.log(`vidljivi bez brenda ili kategorije: ${bad.length}`, bad.slice(0, 5).map((d) => d.name))
 
 async function run() {
@@ -95,6 +95,19 @@ async function run() {
     const tx = client.transaction()
     for (const d of toWrite.slice(i, i + 200)) {
       const doc = clean(d)
+      const {categoryTitle, subcategoryTitle} = doc
+      delete doc.categoryTitle
+      delete doc.subcategoryTitle
+      if (categoryTitle) {
+        const cid = `category-${slugOf(categoryTitle)}`
+        tx.createIfNotExists({_id: cid, _type: 'category', title: categoryTitle})
+        doc.category = {_type: 'reference', _ref: cid}
+        if (subcategoryTitle) {
+          const sid = `subcategory-${slugOf(categoryTitle)}-${slugOf(subcategoryTitle)}`
+          tx.createIfNotExists({_id: sid, _type: 'subcategory', title: subcategoryTitle, category: {_type: 'reference', _ref: cid}})
+          doc.subcategory = {_type: 'reference', _ref: sid}
+        }
+      }
       // novi artikal se napravi; postojećem se osvježe samo podaci iz Excela (opis, slika i "sakriveno" ostaju kako ih je uredio klijent)
       const {_id, _type, slug, hidden, ...excelFields} = doc
       tx.createIfNotExists(doc)
