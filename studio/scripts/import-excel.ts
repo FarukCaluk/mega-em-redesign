@@ -64,7 +64,7 @@ const docs = groups.map((g) => {
     name,
     slug: {_type: 'slug', current: slug},
     sku,
-    brand: brandOf(s(h['Brend'])) || brandFromName(name),
+    brandName: brandOf(s(h['Brend'])) || brandFromName(name),
     categoryTitle: s(h['Primarna kategorija']),
     subcategoryTitle: fixSub(s(h['Sekundarna kategorija'])),
     supplierName: s(h['Dobavljač 1']),
@@ -83,19 +83,36 @@ console.log(`grupa sa varijantama: ${docs.filter((d) => d.variants).length}`)
 const cats: Record<string, number> = {}
 visible.forEach((d) => (cats[d.categoryTitle || '(bez kategorije)'] = (cats[d.categoryTitle || '(bez kategorije)'] || 0) + 1))
 console.log('kategorije (vidljivi):', JSON.stringify(cats))
-const bad = visible.filter((d) => !d.brand || !d.categoryTitle)
+const bad = visible.filter((d) => !d.brandName || !d.categoryTitle)
 console.log(`vidljivi bez brenda ili kategorije: ${bad.length}`, bad.slice(0, 5).map((d) => d.name))
 
 async function run() {
   if (DRY) return console.log('DRY: ništa nije upisano')
   const client = getCliClient({apiVersion: '2025-01-01'})
   const clean = (o: unknown) => JSON.parse(JSON.stringify(o, (_k, v) => (v === '' ? undefined : v)))
+  // brendovi: postojeći se biraju po nazivu, nepoznat se pravi (bez prikaza na stranici Brendovi)
+  const existing: {_id: string; name: string}[] = await client.fetch('*[_type=="brand"]{_id, name}')
+  const alias: Record<string, string> = {kraus: 'krauss'}
+  const norm = (n: string) => alias[n.toLowerCase()] ?? n.toLowerCase()
+  const brandId = new Map(existing.map((b) => [norm(b.name), b._id]))
+  const newBrands = new Map<string, string>()
+  const brandRef = (name: string) => {
+    let id = brandId.get(norm(name))
+    if (!id) {
+      id = `brand-${slugOf(name)}`
+      brandId.set(norm(name), id)
+      newBrands.set(id, name)
+    }
+    return {_type: 'reference', _ref: id}
+  }
   const toWrite = ONLY_READY ? docs.filter((d) => !d.hidden) : docs
   for (let i = 0; i < toWrite.length; i += 200) {
     const tx = client.transaction()
     for (const d of toWrite.slice(i, i + 200)) {
       const doc = clean(d)
-      const {categoryTitle, subcategoryTitle} = doc
+      const {categoryTitle, subcategoryTitle, brandName} = doc
+      delete doc.brandName
+      if (brandName) doc.brand = brandRef(brandName)
       delete doc.categoryTitle
       delete doc.subcategoryTitle
       if (categoryTitle) {
@@ -113,6 +130,8 @@ async function run() {
       tx.createIfNotExists(doc)
       tx.patch(_id, {set: excelFields})
     }
+    for (const [id, name] of newBrands) tx.createIfNotExists({_id: id, _type: 'brand', name, showOnBrandsPage: false, order: 1000})
+    newBrands.clear()
     await tx.commit()
     console.log(`upisano ${Math.min(i + 200, toWrite.length)}/${toWrite.length}`)
   }
