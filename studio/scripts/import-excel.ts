@@ -19,6 +19,8 @@ const s = (v: unknown) => String(v ?? '').trim()
 const slugOf = (t: string) =>
   t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80)
 
+// ispravke pravopisa u kategorijama iz Excela
+const fixSub = (t: string) => (/^duploljep/i.test(t) ? 'Duploljepljiva traka' : t)
 const brandOf = (b: string) => (b.toLowerCase() === 'mipa' ? 'MIPA' : b)
 // ako Brend nije popunjen, pokušaj prepoznati brend po početku naziva (npr. "APEL AS50 ...")
 const knownBrands = content.brands.map((b: {name: string}) => b.name).sort((a: string, b: string) => b.length - a.length)
@@ -64,7 +66,7 @@ const docs = groups.map((g) => {
     sku,
     brand: brandOf(s(h['Brend'])) || brandFromName(name),
     category: s(h['Primarna kategorija']),
-    subcategory: s(h['Sekundarna kategorija']),
+    subcategory: fixSub(s(h['Sekundarna kategorija'])),
     supplierName: s(h['Dobavljač 1']),
     supplierCode: isGroup ? '' : s(h['Šifra dobavljača']),
     onlineCode: isGroup ? '' : s(h['Online šifra']),
