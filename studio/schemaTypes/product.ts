@@ -16,8 +16,26 @@ export const product = defineType({
     }),
     defineField({name: 'sku', title: 'Šifra Mega-Em', type: 'string'}),
     defineField({name: 'brand', title: 'Brend', type: 'string'}),
-    defineField({name: 'category', title: 'Kategorija', type: 'string'}),
-    defineField({name: 'subcategory', title: 'Podkategorija', type: 'string'}),
+    defineField({
+      name: 'category',
+      title: 'Kategorija',
+      type: 'reference',
+      to: [{type: 'category'}],
+      description: 'Izaberite sa liste. Ako kategorija ne postoji, kliknite "Create new" i dodajte je.',
+    }),
+    defineField({
+      name: 'subcategory',
+      title: 'Podkategorija',
+      type: 'reference',
+      to: [{type: 'subcategory'}],
+      description: 'Prikazuju se samo podkategorije izabrane kategorije. Nova se dodaje preko "Create new".',
+      options: {
+        filter: ({document}) => ({
+          filter: 'category._ref == $cat',
+          params: {cat: (document.category as {_ref?: string} | undefined)?._ref ?? ''},
+        }),
+      },
+    }),
     defineField({
       name: 'hidden',
       title: 'Sakriveno na sajtu',

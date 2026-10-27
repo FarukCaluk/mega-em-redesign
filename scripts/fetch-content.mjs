@@ -10,7 +10,7 @@ const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/data/genera
 
 const query = `{
   "products": *[_type == "product" && hidden != true] | order(name asc) {
-    "id": slug.current, name, "brand": coalesce(brand, ""), "category": coalesce(category, ""), subcategory, "sku": coalesce(sku, ""),
+    "id": slug.current, name, "brand": coalesce(brand, ""), "category": coalesce(category->title, ""), "subcategory": subcategory->title, "sku": coalesce(sku, ""),
     "description": coalesce(description, ""), "image": image.asset._ref, intro, supplierName, supplierCode, manufacturer,
     packSize, onlineCode, "variants": variants[]{name, pack, code}
   },
