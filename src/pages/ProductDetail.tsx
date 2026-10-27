@@ -15,6 +15,7 @@ export default function ProductDetail() {
   const fields: [string, string | undefined][] = [
     ['Naziv Mega-Em', product.name],
     ['Kategorija', product.category],
+    ['Podkategorija', product.subcategory],
     ['Naziv dobavljača', product.supplierName],
     ['Šifra dobavljača', product.supplierCode],
     ['Proizvođač', product.manufacturer ?? product.brand],
@@ -40,7 +41,7 @@ export default function ProductDetail() {
             ) : (
               <div className="flex aspect-square items-center justify-center rounded-3xl" style={{ background: `${color}14` }}>
                 <span className="flex h-28 w-28 items-center justify-center rounded-2xl text-3xl font-bold uppercase text-white" style={{ background: color }}>
-                  {product.brand.slice(0, 2)}
+                  {(product.brand || product.name).slice(0, 2)}
                 </span>
               </div>
             )}
