@@ -12,6 +12,13 @@ export const brand = defineType({
   type: 'document',
   fields: [
     defineField({name: 'name', title: 'Naziv', type: 'string', validation: (r) => r.required()}),
+    defineField({
+      name: 'showOnBrandsPage',
+      title: 'Prikaži na stranici Brendovi',
+      type: 'boolean',
+      description: 'Isključeno = brend se može birati na proizvodima, ali nema karticu na stranici Brendovi.',
+      initialValue: true,
+    }),
     defineField({name: 'logo', title: 'Logo', type: 'image'}),
     defineField({name: 'intro', title: 'Kratak opis (kartica na stranici Brendovi)', type: 'text', rows: 3}),
     defineField({name: 'long', title: 'Duži opis (stranica kataloga)', type: 'text', rows: 6}),

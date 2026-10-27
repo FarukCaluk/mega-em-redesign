@@ -15,7 +15,13 @@ export const product = defineType({
       validation: (r) => r.required(),
     }),
     defineField({name: 'sku', title: 'Šifra Mega-Em', type: 'string'}),
-    defineField({name: 'brand', title: 'Brend', type: 'string'}),
+    defineField({
+      name: 'brand',
+      title: 'Brend',
+      type: 'reference',
+      to: [{type: 'brand'}],
+      description: 'Izaberite sa liste. Novi brend dodajte preko "Create new" (neće se pojaviti na stranici Brendovi dok ne uključite tu opciju na brendu).',
+    }),
     defineField({
       name: 'category',
       title: 'Kategorija',

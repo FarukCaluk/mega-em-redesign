@@ -10,7 +10,7 @@ const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/data/genera
 
 const query = `{
   "products": *[_type == "product" && hidden != true] | order(name asc) {
-    "id": slug.current, name, "brand": coalesce(brand, ""), "category": coalesce(category->title, ""), "subcategory": subcategory->title, "sku": coalesce(sku, ""),
+    "id": slug.current, name, "brand": coalesce(brand->name, ""), "category": coalesce(category->title, ""), "subcategory": subcategory->title, "sku": coalesce(sku, ""),
     "description": coalesce(description, ""), "image": image.asset._ref, intro, supplierName, supplierCode, manufacturer,
     packSize, onlineCode, "variants": variants[]{name, pack, code}
   },
@@ -18,7 +18,7 @@ const query = `{
     "slug": slug.current, title, "excerpt": coalesce(excerpt, ""), date, "category": coalesce(category, ""),
     "image": image.asset._ref, "content": content[]{"text": array::join(children[].text, "")}.text
   },
-  "brands": *[_type == "brand"] | order(order asc) {name, "logo": logo.asset._ref, intro, long},
+  "brands": *[_type == "brand" && showOnBrandsPage != false] | order(order asc) {name, "logo": logo.asset._ref, intro, long},
   "franchises": *[_type == "franchise"] | order(order asc) {name, city, address, phone, email, hours, "image": image.asset._ref},
   "team": *[_type == "teamMember"] | order(order asc) {name, role, department, email, phone},
   "education": *[_type == "educationPhoto"] | order(order asc) {"image": image.asset._ref, "alt": coalesce(alt, "")}
