@@ -47,15 +47,20 @@ const fixCat: Record<string, string> = {
 const cat = (v: string) => (v && !/^\d+$/.test(v) ? fixCat[v.toLowerCase()] ?? v : '')
 
 // ---------- varijante: isti proizvod koji se razlikuje samo po granulaciji/veličini ----------
-const stem = (name: string) =>
-  name
-    .replace(/3M/g, '§3M§') // brend 3M nije veličina
-    .replace(/\bP\d{2,4}\+?N?\b/gi, '') // granulacija P120, P1500+
-    .replace(/\b\d+(?:[.,]\d+)?\s?(?:mm|cm|ml|kg|g|l|m)(?![a-wyz])(?:\s?x\s?\d+(?:[.,]\d+)?\s?(?:mm|cm|ml|kg|g|l|m)(?![a-wyz]))*/gi, '') // veličine (i 19mmx45m)
-    .replace(/\b\d{4,6}[A-Z]?\b/g, '') // šifra proizvođača na kraju
-    .replace(/\s+x\s+/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+const COLORS = new Set(
+  'bijeli bijela bijelo crni crna crno crveni crvena crveno plavi plava plavo zeleni zelena zeleno žuti žuta žuto narandžasti narandžasta orange sivi siva sivo ljubičasti ljubičasta smeđi smeđa srebrni zlatni roza ružičasti tamno svijetlo prozirni providni transparentni čep'.split(' '),
+)
+// token koji opisuje varijantu (šifra, veličina, boja...), ne sam proizvod
+const isVariantToken = (t: string) => /\d/.test(t) || COLORS.has(t.toLowerCase()) || /^[-–x+&/()]+$/i.test(t) || t.length === 1 || /^[a-zčćšđž]{1,2}\.$/i.test(t)
+// osnova proizvoda = naziv bez varijantnih tokena na kraju (npr. "3M Polir pasta 09374 bijeli čep" -> "3M Polir pasta")
+const stem = (name: string) => {
+  // sve iza zadnjeg " - " je opis varijante (boja, nijansa), npr. "COOL Lak lazura - konjak"
+  const cut = name.lastIndexOf(' - ')
+  const base = cut > 0 && name.slice(0, cut).split(/\s+/).length >= 2 ? name.slice(0, cut) : name
+  const tokens = base.split(/\s+/).filter(Boolean)
+  while (tokens.length > 2 && isVariantToken(tokens[tokens.length - 1])) tokens.pop()
+  return tokens.join(' ')
+}
 
 type Item = {row: Row; name: string}
 const items: Item[] = rows.map((row) => ({row, name: col(row, 'Novi naziv') || col(row, 'Naziv')}))
@@ -82,7 +87,7 @@ const groups = new Map<string, Group>()
 for (const it of unique) {
   const s = stem(it.name)
   const brand = col(it.row, 'Brend').toLowerCase()
-  const key = [brand, cat(col(it.row, 'Primarna')), cat(col(it.row, 'Sekundarna')), s.toLowerCase()].join('|')
+  const key = [brand, s.toLowerCase()].join('|')
   // stem prekratak ili isti kao naziv bez ikakve varijante -> zaseban artikal
   const g = groups.get(key) ?? {key, items: []}
   g.items.push(it)
@@ -208,7 +213,7 @@ async function run() {
   }
 
   // 4) NR krep traka: naziv, pakovanja i slika iz prethodnog uvoza
-  const nr = prodDocs.find((d) => /^nr traka 90.c orange/i.test(String(d.name)))
+  const nr = prodDocs.find((d) => /^nr traka/i.test(String(d.name)) && (d.variants ?? []).some((v: {name: string}) => /90.c orange/i.test(v.name)))
   if (nr) {
     const packs: Record<string, string> = {'19mm': '72', '25mm': '64', '38mm': '48', '50mm': '36'}
     const variants = (nr.variants ?? []).map((v: {name: string}) => {
