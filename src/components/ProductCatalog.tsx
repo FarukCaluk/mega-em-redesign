@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Search, X, PackageSearch, SlidersHorizontal, ArrowRight } from 'lucide-react'
-import { products, productCategoryList, productBrandList, productSubcategoryList, subcategoriesOf, productIntro } from '../data/products'
+import { Search, X, PackageSearch, SlidersHorizontal, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { products, productCategoryList, productBrandList, productSubcategoryList, productTertiaryList, subcategoriesOf, tertiaryOf, productIntro } from '../data/products'
 import { brandByName } from '../data/brands'
 import { swatches } from '../data/content'
 import TiltCard from './TiltCard'
@@ -37,11 +37,44 @@ function FilterGroup({
   )
 }
 
+const PAGE_SIZE = 30
+
+function Pagination({ page, pageCount, onChange }: { page: number; pageCount: number; onChange: (n: number) => void }) {
+  // prva, zadnja i susjedne stranice; ostalo se skraćuje tačkicama
+  const nums = Array.from({ length: pageCount }, (_, i) => i).filter((i) => i === 0 || i === pageCount - 1 || Math.abs(i - page) <= 1)
+  const btn = 'flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-sm font-medium transition'
+  return (
+    <nav aria-label="Stranice proizvoda" className="mt-10 flex flex-wrap items-center justify-center gap-2">
+      <button onClick={() => onChange(page - 1)} disabled={page === 0} className={`${btn} border border-black/10 bg-white text-ink disabled:opacity-40`}>
+        <ChevronLeft size={16} /> <span className="hidden sm:inline">Prethodna</span>
+      </button>
+      {nums.map((n, i) => (
+        <span key={n} className="flex items-center gap-2">
+          {i > 0 && n - nums[i - 1] > 1 && <span className="text-muted">…</span>}
+          <button
+            onClick={() => onChange(n)}
+            aria-current={n === page ? 'page' : undefined}
+            className={`${btn} ${n === page ? 'bg-primary text-white' : 'border border-black/10 bg-white text-ink hover:border-primary'}`}
+          >
+            {n + 1}
+          </button>
+        </span>
+      ))}
+      <button onClick={() => onChange(page + 1)} disabled={page === pageCount - 1} className={`${btn} border border-black/10 bg-white text-ink disabled:opacity-40`}>
+        <span className="hidden sm:inline">Sljedeća</span> <ChevronRight size={16} />
+      </button>
+    </nav>
+  )
+}
+
 export default function ProductCatalog() {
   const params = useSearchParams()[0]
   const [query, setQuery] = useState(params.get('q') ?? '')
   const [activeCategories, setActiveCategories] = useState<string[]>([])
   const [activeSubs, setActiveSubs] = useState<string[]>([])
+  const [activeTerts, setActiveTerts] = useState<string[]>([])
+  const [page, setPage] = useState(0)
+  const listRef = useRef<HTMLDivElement>(null)
   const brandParam = params.get('brend')
   const [activeBrands, setActiveBrands] = useState<string[]>(() => {
     const b = brandByName(brandParam)
@@ -57,26 +90,39 @@ export default function ProductCatalog() {
     return products.filter((p) => {
       if (activeCategories.length > 0 && !activeCategories.includes(p.category)) return false
       if (activeSubs.length > 0 && !activeSubs.includes(p.subcategory ?? '')) return false
+      if (activeTerts.length > 0 && !activeTerts.includes(p.tertiary ?? '')) return false
       if (activeBrands.length > 0 && !activeBrands.includes(p.brand)) return false
       if (!q) return true
-      return [p.name, p.brand, p.category, p.subcategory ?? '', p.sku, p.description].some((field) => field.toLowerCase().includes(q))
+      return [p.name, p.brand, p.category, p.subcategory ?? '', p.tertiary ?? '', p.sku, p.description].some((field) => field.toLowerCase().includes(q))
     })
-  }, [query, activeCategories, activeSubs, activeBrands])
+  }, [query, activeCategories, activeSubs, activeTerts, activeBrands])
+
+  // nova pretraga ili filter vraća na prvu stranicu
+  useEffect(() => setPage(0), [query, activeCategories, activeSubs, activeTerts, activeBrands])
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const shown = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+  const goTo = (n: number) => {
+    setPage(n)
+    listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const brandInfo = activeBrands.length === 1 ? brandByName(activeBrands[0]) : undefined
-  const activeCount = activeCategories.length + activeSubs.length + activeBrands.length
+  const activeCount = activeCategories.length + activeSubs.length + activeTerts.length + activeBrands.length
   const subOptions = activeCategories.length ? subcategoriesOf(activeCategories) : productSubcategoryList
+  const tertOptions = activeCategories.length || activeSubs.length ? tertiaryOf(activeCategories, activeSubs) : productTertiaryList
 
   const filterPanel = (
     <div className="space-y-7">
       <FilterGroup title="Kategorija" options={productCategoryList} active={activeCategories} onToggle={(v) => toggle(activeCategories, setActiveCategories, v)} />
       {subOptions.length > 0 && <FilterGroup title="Podkategorija" options={subOptions} active={activeSubs} onToggle={(v) => toggle(activeSubs, setActiveSubs, v)} />}
+      {tertOptions.length > 0 && <FilterGroup title="Tercijarna kategorija" options={tertOptions} active={activeTerts} onToggle={(v) => toggle(activeTerts, setActiveTerts, v)} />}
       <FilterGroup title="Brend" options={productBrandList} active={activeBrands} onToggle={(v) => toggle(activeBrands, setActiveBrands, v)} />
       {activeCount > 0 && (
         <button
           onClick={() => {
             setActiveCategories([])
             setActiveSubs([])
+            setActiveTerts([])
             setActiveBrands([])
           }}
           className="text-sm font-medium text-primary hover:underline"
@@ -133,12 +179,12 @@ export default function ProductCatalog() {
           </div>
         )}
 
-        <p className="mt-5 text-sm text-muted">
-          {filtered.length} {filtered.length === 1 ? 'proizvod' : 'proizvoda'}
+        <p ref={listRef} className="mt-5 scroll-mt-28 text-sm text-muted">
+          {filtered.length === 0 ? '0 proizvoda' : `Prikazano ${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, filtered.length)} od ${filtered.length} ${filtered.length === 1 ? 'proizvoda' : 'proizvoda'}`}
         </p>
 
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((p, i) => {
+        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.map((p, i) => {
               const color = swatches[productCategoryList.indexOf(p.category) % swatches.length]
               return (
                 <div key={p.id} className="animate-fade-up" style={{ animationDelay: `${(i % 6) * 30}ms` }}>
@@ -171,6 +217,8 @@ export default function ProductCatalog() {
               )
             })}
         </div>
+
+        {pageCount > 1 && <Pagination page={page} pageCount={pageCount} onChange={goTo} />}
 
         {filtered.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-20 text-center">
