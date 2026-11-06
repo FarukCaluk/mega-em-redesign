@@ -43,6 +43,19 @@ export const product = defineType({
       },
     }),
     defineField({
+      name: 'tertiaryCategory',
+      title: 'Tercijarna kategorija',
+      type: 'reference',
+      to: [{type: 'tertiaryCategory'}],
+      description: 'Neobavezno. Prikazuju se samo tercijarne kategorije izabrane podkategorije.',
+      options: {
+        filter: ({document}) => ({
+          filter: 'subcategory._ref == $sub',
+          params: {sub: (document.subcategory as {_ref?: string} | undefined)?._ref ?? ''},
+        }),
+      },
+    }),
+    defineField({
       name: 'hidden',
       title: 'Sakriveno na sajtu',
       type: 'boolean',

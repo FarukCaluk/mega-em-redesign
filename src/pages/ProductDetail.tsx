@@ -12,14 +12,15 @@ export default function ProductDetail() {
   if (!product) return <Navigate to="/proizvodi" replace />
 
   const color = swatches[productCategoryList.indexOf(product.category) % swatches.length]
-  const fields: [string, string | undefined][] = [
-    ['Naziv Mega-Em', product.name],
+  // prikazuju se samo polja koja imaju vrijednost
+  const fields = ([
+    ['Naziv', product.name],
     ['Kategorija', product.category],
     ['Podkategorija', product.subcategory],
-    ['Naziv dobavljača', product.supplierName],
+    ['Tercijarna kategorija', product.tertiary],
     ['Šifra dobavljača', product.supplierCode],
-    ['Proizvođač', product.manufacturer ?? product.brand],
-  ]
+    ['Brend', product.brand],
+  ] as [string, string | undefined][]).filter(([, v]) => v)
   const rows = product.variants ?? (product.packSize || product.onlineCode ? [{ name: product.name, pack: product.packSize ?? '', code: product.onlineCode ?? '' }] : [])
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
@@ -58,7 +59,7 @@ export default function ProductDetail() {
               {fields.map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</dt>
-                  <dd className="mt-1.5 font-semibold text-ink">{value || '—'}</dd>
+                  <dd className="mt-1.5 font-semibold text-ink">{value}</dd>
                 </div>
               ))}
             </dl>

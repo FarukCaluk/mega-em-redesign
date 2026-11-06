@@ -6,6 +6,7 @@ export interface Product {
   brand: string
   category: string
   subcategory?: string
+  tertiary?: string
   sku: string
   description: string
   image?: string
@@ -27,5 +28,9 @@ const uniq = (xs: (string | undefined)[]) => Array.from(new Set(xs.filter((x): x
 export const productCategoryList = uniq(products.map((p) => p.category))
 export const productBrandList = uniq(products.map((p) => p.brand))
 export const productSubcategoryList = uniq(products.map((p) => p.subcategory))
+export const productTertiaryList = uniq(products.map((p) => p.tertiary))
+// tercijarne kategorije za odabrane podkategorije (ili kategorije, ako podkategorija nije izabrana)
+export const tertiaryOf = (cats: string[], subs: string[]) =>
+  uniq(products.filter((p) => (subs.length ? subs.includes(p.subcategory ?? '') : !cats.length || cats.includes(p.category))).map((p) => p.tertiary))
 // podkategorije po kategoriji (za filter koji prikazuje samo relevantne)
 export const subcategoriesOf = (cats: string[]) => uniq(products.filter((p) => cats.includes(p.category)).map((p) => p.subcategory))
