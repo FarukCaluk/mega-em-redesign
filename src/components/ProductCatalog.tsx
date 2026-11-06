@@ -68,18 +68,49 @@ function Pagination({ page, pageCount, onChange }: { page: number; pageCount: nu
 }
 
 export default function ProductCatalog() {
-  const params = useSearchParams()[0]
-  const [query, setQuery] = useState(params.get('q') ?? '')
-  const [activeCategories, setActiveCategories] = useState<string[]>([])
-  const [activeSubs, setActiveSubs] = useState<string[]>([])
-  const [activeTerts, setActiveTerts] = useState<string[]>([])
-  const [page, setPage] = useState(0)
+  // filteri, pretraga i stranica žive u adresi (?kat=…&pod=…&brend=…&q=…&str=2), pa se pamte kad se otvori artikal i vrati nazad
+  const [params, setParams] = useSearchParams()
+  const mutate = (fn: (p: URLSearchParams) => void, keepPage = false) =>
+    setParams(
+      (prev) => {
+        const n = new URLSearchParams(prev)
+        fn(n)
+        if (!keepPage) n.delete('str')
+        return n
+      },
+      { replace: true },
+    )
+  const listParam = (key: string) => (v: string[]) =>
+    mutate((p) => {
+      p.delete(key)
+      v.forEach((x) => p.append(key, x))
+    })
+  const activeCategories = params.getAll('kat')
+  const activeSubs = params.getAll('pod')
+  const activeTerts = params.getAll('ter')
+  const activeBrands = params.getAll('brend').map((b) => productBrandList.find((x) => x.toLowerCase() === b.toLowerCase()) ?? brandByName(b)?.name ?? b)
+  const setActiveCategories = listParam('kat')
+  const setActiveSubs = listParam('pod')
+  const setActiveTerts = listParam('ter')
+  const setActiveBrands = listParam('brend')
+  const urlQuery = params.get('q') ?? ''
+  const [query, setQueryState] = useState(urlQuery)
+  useEffect(() => setQueryState(urlQuery), [urlQuery]) // pretraga sa početne ili izmjena adrese
+  const setQuery = (v: string) => {
+    setQueryState(v)
+    mutate((p) => (v ? p.set('q', v) : p.delete('q')))
+  }
+  const page = Math.max(0, Number(params.get('str') ?? 1) - 1 || 0)
+  const setPage = (n: number) => mutate((p) => (n > 0 ? p.set('str', String(n + 1)) : p.delete('str')), true)
   const listRef = useRef<HTMLDivElement>(null)
-  const brandParam = params.get('brend')
-  const [activeBrands, setActiveBrands] = useState<string[]>(() => {
-    const b = brandByName(brandParam)
-    return b ? [productBrandList.find((x) => x.toLowerCase() === b.name.toLowerCase()) ?? b.name] : []
-  })
+  // zadnja pretraga se pamti za dugme "Nazad na katalog" na stranici artikla
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('katalog-pretraga', params.toString())
+    } catch {
+      /* privatni prozor */
+    }
+  }, [params])
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const toggle = (list: string[], set: (v: string[]) => void, value: string) =>
@@ -97,10 +128,9 @@ export default function ProductCatalog() {
     })
   }, [query, activeCategories, activeSubs, activeTerts, activeBrands])
 
-  // nova pretraga ili filter vraća na prvu stranicu
-  useEffect(() => setPage(0), [query, activeCategories, activeSubs, activeTerts, activeBrands])
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const shown = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+  const current = Math.min(page, pageCount - 1)
+  const shown = filtered.slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE)
   const goTo = (n: number) => {
     setPage(n)
     listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -180,7 +210,7 @@ export default function ProductCatalog() {
         )}
 
         <p ref={listRef} className="mt-5 scroll-mt-28 text-sm text-muted">
-          {filtered.length === 0 ? '0 proizvoda' : `Prikazano ${page * PAGE_SIZE + 1}–${Math.min((page + 1) * PAGE_SIZE, filtered.length)} od ${filtered.length} ${filtered.length === 1 ? 'proizvoda' : 'proizvoda'}`}
+          {filtered.length === 0 ? '0 proizvoda' : `Prikazano ${current * PAGE_SIZE + 1}–${Math.min((current + 1) * PAGE_SIZE, filtered.length)} od ${filtered.length} ${filtered.length === 1 ? 'proizvoda' : 'proizvoda'}`}
         </p>
 
         <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -218,7 +248,7 @@ export default function ProductCatalog() {
             })}
         </div>
 
-        {pageCount > 1 && <Pagination page={page} pageCount={pageCount} onChange={goTo} />}
+        {pageCount > 1 && <Pagination page={current} pageCount={pageCount} onChange={goTo} />}
 
         {filtered.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-20 text-center">

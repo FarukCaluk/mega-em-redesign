@@ -1,5 +1,4 @@
 import { FileText } from 'lucide-react'
-import { useLocation } from 'react-router-dom'
 import { catalogs, swatches } from '../data/content'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
@@ -7,13 +6,12 @@ import TiltCard from '../components/TiltCard'
 import ProductCatalog from '../components/ProductCatalog'
 
 export default function Products() {
-  const { search } = useLocation()
   return (
     <>
       <PageIntro eyebrow="Katalog proizvoda" title="Katalog proizvoda" description="Pretražite katalog po nazivu, brendu, šifri ili kategoriji proizvoda." />
 
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <ProductCatalog key={search} />
+        <ProductCatalog />
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-24">
