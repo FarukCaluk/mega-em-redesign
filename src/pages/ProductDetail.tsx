@@ -18,7 +18,6 @@ export default function ProductDetail() {
     ['Kategorija', product.category],
     ['Podkategorija', product.subcategory],
     ['Tercijarna kategorija', product.tertiary],
-    ['Šifra dobavljača', product.supplierCode],
     ['Brend', product.brand],
   ] as [string, string | undefined][]).filter(([, v]) => v)
   const rows = product.variants ?? (product.packSize || product.onlineCode ? [{ name: product.name, pack: product.packSize ?? '', code: product.onlineCode ?? '' }] : [])
@@ -68,7 +67,7 @@ export default function ProductDetail() {
 
         {rows.length > 0 && (
           <div className="mt-16">
-            <h3 className="font-display text-xl font-semibold text-ink">{product.variants ? 'Dostupne varijante' : 'Pakovanje'}</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">Dostupne varijante</h3>
             <div className="mt-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
               <table className="w-full text-left text-xs sm:text-sm">
                 <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
