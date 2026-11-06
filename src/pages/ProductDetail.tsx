@@ -1,13 +1,18 @@
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ChevronDown } from 'lucide-react'
 import { products, productCategoryList } from '../data/products'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
 
+const VARIANT_LIMIT = 15
+
 export default function ProductDetail() {
   const { id } = useParams()
   const product = products.find((p) => p.id === id)
+  const [showAll, setShowAll] = useState(false)
+  useEffect(() => setShowAll(false), [id])
 
   if (!product) return <Navigate to="/proizvodi" replace />
 
@@ -21,6 +26,7 @@ export default function ProductDetail() {
     ['Brend', product.brand],
   ] as [string, string | undefined][]).filter(([, v]) => v)
   const rows = product.variants ?? (product.packSize || product.onlineCode ? [{ name: product.name, pack: product.packSize ?? '', code: product.onlineCode ?? '' }] : [])
+  const shownRows = showAll ? rows : rows.slice(0, VARIANT_LIMIT)
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
   return (
@@ -74,12 +80,21 @@ export default function ProductDetail() {
                   <tr><th className="px-3 py-3 sm:px-5">Naziv</th><th className="px-2 py-3 sm:px-5"><span className="sm:hidden">Kom. u pak.</span><span className="hidden sm:inline">Broj komada u paketu</span></th><th className="px-2 py-3 sm:px-5"><span className="sm:hidden">Šifra</span><span className="hidden sm:inline">Online šifra</span></th></tr>
                 </thead>
                 <tbody className="divide-y divide-black/5">
-                  {rows.map((v, i) => (
+                  {shownRows.map((v, i) => (
                     <tr key={i}><td className="px-3 py-3 font-medium text-ink sm:px-5">{v.name}</td><td className="px-2 py-3 text-muted sm:px-5">{v.pack || '—'}</td><td className="px-2 py-3 text-muted sm:px-5">{v.code || '—'}</td></tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            {rows.length > VARIANT_LIMIT && (
+              <button
+                onClick={() => setShowAll((v) => !v)}
+                className="mx-auto mt-5 flex items-center gap-2 rounded-full border border-primary/20 px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
+              >
+                {showAll ? 'Prikaži manje' : `Prikaži sve (${rows.length})`}
+                <ChevronDown size={16} className={`transition-transform ${showAll ? 'rotate-180' : ''}`} />
+              </button>
+            )}
           </div>
         )}
 
