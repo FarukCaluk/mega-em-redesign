@@ -20,7 +20,7 @@ function FilterGroup({
   return (
     <div>
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">{title}</p>
-      <div className="space-y-2">
+      <div className="max-h-72 space-y-2 overflow-y-auto pr-2">
         {options.map((opt) => (
           <label key={opt} className="flex cursor-pointer items-start gap-2.5 text-sm text-ink/80">
             <input

@@ -51,7 +51,7 @@ const stem = (name: string) =>
   name
     .replace(/3M/g, '§3M§') // brend 3M nije veličina
     .replace(/\bP\d{2,4}\+?N?\b/gi, '') // granulacija P120, P1500+
-    .replace(/\b\d+([.,]\d+)?\s?(mm|cm|m|ml|l|g|kg)\b/gi, '') // veličine
+    .replace(/\b\d+(?:[.,]\d+)?\s?(?:mm|cm|ml|kg|g|l|m)(?![a-wyz])(?:\s?x\s?\d+(?:[.,]\d+)?\s?(?:mm|cm|ml|kg|g|l|m)(?![a-wyz]))*/gi, '') // veličine (i 19mmx45m)
     .replace(/\b\d{4,6}[A-Z]?\b/g, '') // šifra proizvođača na kraju
     .replace(/\s+x\s+/gi, ' ')
     .replace(/\s+/g, ' ')
@@ -135,8 +135,13 @@ async function run() {
   }
 
   // 1) sačuvaj sliku NR trake iz prethodnog uvoza, pa obriši prethodni Excel uvoz (zamjenjuje ga ovaj noviji katalog)
-  const nrOld = await client.fetch('*[_id=="xl-01-09-01-ktt-002"][0].image')
-  const oldIds: string[] = await client.fetch('*[_type=="product" && _id match "xl-*"]._id')
+  let nrOld = (await client.fetch('*[_id=="xl-01-09-01-ktt-002"][0].image')) ?? (await client.fetch('*[_type=="product" && slug.current=="nr-krep-traka-orange-90"][0].image'))
+  if (!nrOld) {
+    // slika je ostala među fajlovima u Sanityju iz prvog uvoza
+    const asset = await client.fetch('*[_type=="sanity.imageAsset" && originalFilename=="nr-krep-traka-orange-90.webp"][0]._id')
+    if (asset) nrOld = {_type: 'image', asset: {_type: 'reference', _ref: asset}}
+  }
+  const oldIds: string[] = await client.fetch('*[_type=="product" && (_id match "xl-*" || _id match "web-*")]._id')
   for (let k = 0; k < oldIds.length; k += 200) await commit((tx) => oldIds.slice(k, k + 200).forEach((id) => tx.delete(id)))
   console.log('obrisano prethodnog uvoza:', oldIds.length)
 
@@ -203,7 +208,7 @@ async function run() {
   }
 
   // 4) NR krep traka: naziv, pakovanja i slika iz prethodnog uvoza
-  const nr = prodDocs.find((d) => /^nr krep traka pm 90 orange/i.test(String(d.name)))
+  const nr = prodDocs.find((d) => /^nr traka 90.c orange/i.test(String(d.name)))
   if (nr) {
     const packs: Record<string, string> = {'19mm': '72', '25mm': '64', '38mm': '48', '50mm': '36'}
     const variants = (nr.variants ?? []).map((v: {name: string}) => {
