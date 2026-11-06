@@ -8,6 +8,16 @@ import PageIntro from '../components/PageIntro'
 
 const VARIANT_LIMIT = 15
 
+// zadnji filteri iz kataloga (sačuvani u sessionStorage)
+const savedSearch = () => {
+  try {
+    const s = sessionStorage.getItem('katalog-pretraga')
+    return s ? `?${s}` : ''
+  } catch {
+    return ''
+  }
+}
+
 export default function ProductDetail() {
   const { id } = useParams()
   const product = products.find((p) => p.id === id)
@@ -34,7 +44,7 @@ export default function ProductDetail() {
       <PageIntro eyebrow="Katalog proizvoda" title={product.name} description={product.category} />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <Link to="/proizvodi" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary">
+        <Link to={`/proizvodi${savedSearch()}`} className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary">
           <ArrowLeft size={16} /> Nazad na katalog
         </Link>
 
