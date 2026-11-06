@@ -45,7 +45,6 @@ const fixCat: Record<string, string> = {
   'osvježivać': 'Osvježivač',
 }
 const cat = (v: string) => (v && !/^\d+$/.test(v) ? fixCat[v.toLowerCase()] ?? v : '')
-const brandAlias: Record<string, string> = {'sunny pads': 'sunnypads', meguiars: 'meguiar’s', kraus: 'krauss', cool: 'cool'}
 
 // ---------- varijante: isti proizvod koji se razlikuje samo po granulaciji/veličini ----------
 const stem = (name: string) =>
@@ -124,6 +123,7 @@ console.log('uzorak pojedinačnih:', docs.filter((d) => !d.variants).slice(0, 6)
 const norm = (n: string) => n.toLowerCase().replace(/[^a-z0-9]/g, '')
 const brandAlias: Record<string, string> = {kraus: 'krauss'}
 const SKIP_BRANDS = new Set(['x']) // nepoznata oznaka "X" u katalogu, ne uvozi se kao brend
+
 
 async function run() {
   if (DRY) return console.log('DRY: ništa nije upisano')
