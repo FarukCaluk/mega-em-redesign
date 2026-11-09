@@ -1,13 +1,16 @@
 // Uvoz proizvoda iz kataloga "Web import" (Excel) u Sanity.
 // Probni prolaz (ništa se ne upisuje):  DRY=1 npx sanity exec scripts/import-web.ts --with-user-token
 // Pravi uvoz:                           npx sanity exec scripts/import-web.ts --with-user-token
-// Pravila: redovi označeni narandžastom bojom se preskaču; duplikati se ne uvoze; isti proizvod sa varijantama
-// (npr. razne granulacije P120, P150...) ide kao jedan artikal sa tabelom varijanti; prazna polja ostaju prazna.
+// Pravila: COOL proizvodi i redovi označeni narandžastom bojom se preskaču; duplikati se ne uvoze;
+// varijante su ISKLJUČIVO redovi koji su u koloni Katalog spojeni u jednu ćeliju (jedan artikal, tabela varijanti).
+// Artikli kojih nema u Excelu se brišu.
+// Dataset: DATASET=review za pregled prije objave (podrazumijevano production).
 import {getCliClient} from 'sanity/cli'
 import XLSX from 'xlsx'
 
-const FILE = process.env.XLSX ?? 'C:/Users/Korisnik/Downloads/Web import 4.11.2026..xlsx'
+const FILE = process.env.XLSX ?? 'C:/Users/Korisnik/Downloads/Web import 4.11.2026. (2).xlsx'
 const DRY = process.env.DRY === '1'
+const DATASET = process.env.DATASET ?? 'production'
 const ORANGE = 'F6C6AD'
 
 const t = (v: unknown) => String(v ?? '').replace(/\s+/g, ' ').trim()
@@ -20,9 +23,11 @@ const ws = wb.Sheets['Sheet1']
 const range = XLSX.utils.decode_range(ws['!ref']!)
 const cell = (r: number, c: number) => ws[XLSX.utils.encode_cell({r, c})]
 const header = Array.from({length: 11}, (_, c) => t(cell(0, c)?.v))
-type Row = Record<string, string>
-const rows: Row[] = []
+type Row = Record<string, string> & {__r?: never}
+const rows: (Row & {r: number})[] = []
 let skippedOrange = 0
+let skippedCool = 0
+const isCool = (o: Record<string, string>) => /^cool\b/i.test(o['Naziv'] ?? '') || /^cool\b/i.test(o['Novi naziv'] ?? '') || /^cool\b/i.test(o['Katalog'] ?? '') || /^cool$/i.test(o['Brend'] ?? '')
 for (let r = 1; r <= Math.min(range.e.r, 20000); r++) {
   if (!t(cell(r, 0)?.v) && !t(cell(r, 1)?.v)) continue
   const fill = cell(r, 0)?.s?.fgColor?.rgb || cell(r, 1)?.s?.fgColor?.rgb || ''
@@ -32,7 +37,11 @@ for (let r = 1; r <= Math.min(range.e.r, 20000); r++) {
   }
   const o: Row = {}
   header.forEach((h, c) => (o[h] = t(cell(r, c)?.v)))
-  rows.push(o)
+  if (isCool(o)) {
+    skippedCool++
+    continue
+  }
+  rows.push({...o, r})
 }
 const col = (r: Row, name: string) => r[header.find((h) => h.toLowerCase().startsWith(name.toLowerCase())) ?? ''] ?? ''
 
@@ -46,24 +55,17 @@ const fixCat: Record<string, string> = {
 }
 const cat = (v: string) => (v && !/^\d+$/.test(v) ? fixCat[v.toLowerCase()] ?? v : '')
 
-// ---------- varijante: isti proizvod koji se razlikuje samo po granulaciji/veličini ----------
-const COLORS = new Set(
-  'bijeli bijela bijelo crni crna crno crveni crvena crveno plavi plava plavo zeleni zelena zeleno žuti žuta žuto narandžasti narandžasta orange sivi siva sivo ljubičasti ljubičasta smeđi smeđa srebrni zlatni roza ružičasti tamno svijetlo prozirni providni transparentni čep'.split(' '),
-)
-// token koji opisuje varijantu (šifra, veličina, boja...), ne sam proizvod
-const isVariantToken = (t: string) => /\d/.test(t) || COLORS.has(t.toLowerCase()) || /^[-–x+&/()]+$/i.test(t) || t.length === 1 || /^[a-zčćšđž]{1,2}\.$/i.test(t)
-// osnova proizvoda = naziv bez varijantnih tokena na kraju (npr. "3M Polir pasta 09374 bijeli čep" -> "3M Polir pasta")
-const stem = (name: string) => {
-  // sve iza zadnjeg " - " je opis varijante (boja, nijansa), npr. "COOL Lak lazura - konjak"
-  const cut = name.lastIndexOf(' - ')
-  const base = cut > 0 && name.slice(0, cut).split(/\s+/).length >= 2 ? name.slice(0, cut) : name
-  const tokens = base.split(/\s+/).filter(Boolean)
-  while (tokens.length > 2 && isVariantToken(tokens[tokens.length - 1])) tokens.pop()
-  return tokens.join(' ')
-}
+// ---------- varijante: samo redovi spojeni u koloni Katalog (D) ----------
+const mergeId = new Map<number, number>() // red -> redni broj spojene ćelije
+const mergeName = new Map<number, string>() // redni broj -> naziv iz spojene ćelije
+;(ws['!merges'] ?? []).forEach((m, i) => {
+  if (m.s.c !== 3 || m.e.c !== 3 || m.e.r <= m.s.r) return
+  mergeName.set(i, t(cell(m.s.r, 3)?.v))
+  for (let r = m.s.r; r <= m.e.r; r++) mergeId.set(r, i)
+})
 
-type Item = {row: Row; name: string}
-const items: Item[] = rows.map((row) => ({row, name: col(row, 'Novi naziv') || col(row, 'Naziv')}))
+type Item = {row: Row; name: string; r: number}
+const items: Item[] = rows.map((row) => ({row, r: row.r, name: col(row, 'Novi naziv') || col(row, 'Naziv')}))
 
 // dedupe: ista šifra ili isti naziv
 const seenSku = new Set<string>()
@@ -82,14 +84,12 @@ for (const it of items) {
   unique.push(it)
 }
 
-type Group = {key: string; items: Item[]}
+type Group = {key: string; title?: string; items: Item[]}
 const groups = new Map<string, Group>()
 for (const it of unique) {
-  const s = stem(it.name)
-  const brand = col(it.row, 'Brend').toLowerCase()
-  const key = [brand, s.toLowerCase()].join('|')
-  // stem prekratak ili isti kao naziv bez ikakve varijante -> zaseban artikal
-  const g = groups.get(key) ?? {key, items: []}
+  const m = mergeId.get(it.r)
+  const key = m !== undefined ? 'm' + m : 'r' + it.r
+  const g = groups.get(key) ?? {key, title: m !== undefined ? mergeName.get(m) : undefined, items: []}
   g.items.push(it)
   groups.set(key, g)
 }
@@ -98,7 +98,7 @@ for (const it of unique) {
 const docs = [...groups.values()].map((g) => {
   const h = g.items[0].row
   const multi = g.items.length > 1
-  const name = multi ? stem(g.items[0].name) : g.items[0].name
+  const name = multi ? g.title || g.items[0].name : g.items[0].name
   return {
     _id: `web-${slugOf(col(h, 'Šifra'))}`,
     _type: 'product',
@@ -117,7 +117,7 @@ const docs = [...groups.values()].map((g) => {
   }
 })
 
-console.log(`redova: ${rows.length + skippedOrange}, preskočeno (narandžasto): ${skippedOrange}, duplikata: ${duplicates.length}`)
+console.log(`redova: ${rows.length + skippedOrange + skippedCool}, preskočeno (narandžasto): ${skippedOrange}, preskočeno (COOL): ${skippedCool}, duplikata: ${duplicates.length}`)
 console.log(`artikala za uvoz: ${docs.length}, od toga sa varijantama: ${docs.filter((d) => d.variants).length} (pokriva ${docs.filter((d) => d.variants).reduce((a, d) => a + (d.variants?.length ?? 0), 0)} redova)`)
 console.log('duplikati:', duplicates.slice(0, 5))
 console.log('bez brenda:', docs.filter((d) => !d.brandName).length, '| bez kategorije:', docs.filter((d) => !d.categoryTitle).length)
@@ -132,23 +132,27 @@ const SKIP_BRANDS = new Set(['x']) // nepoznata oznaka "X" u katalogu, ne uvozi 
 
 async function run() {
   if (DRY) return console.log('DRY: ništa nije upisano')
-  const client = getCliClient({apiVersion: '2025-01-01'})
+  const client = getCliClient({apiVersion: '2025-01-01'}).withConfig({dataset: DATASET})
   const commit = async (build: (tx: ReturnType<typeof client.transaction>) => void) => {
     const tx = client.transaction()
     build(tx)
     await tx.commit()
   }
 
-  // 1) sačuvaj sliku NR trake iz prethodnog uvoza, pa obriši prethodni Excel uvoz (zamjenjuje ga ovaj noviji katalog)
-  let nrOld = (await client.fetch('*[_id=="xl-01-09-01-ktt-002"][0].image')) ?? (await client.fetch('*[_type=="product" && slug.current=="nr-krep-traka-orange-90"][0].image'))
-  if (!nrOld) {
-    // slika je ostala među fajlovima u Sanityju iz prvog uvoza
-    const asset = await client.fetch('*[_type=="sanity.imageAsset" && originalFilename=="nr-krep-traka-orange-90.webp"][0]._id')
-    if (asset) nrOld = {_type: 'image', asset: {_type: 'reference', _ref: asset}}
-  }
+  // 1) obriši prethodni Excel uvoz (zamjenjuje ga ovaj noviji katalog)
   const oldIds: string[] = await client.fetch('*[_type=="product" && (_id match "xl-*" || _id match "web-*")]._id')
   for (let k = 0; k < oldIds.length; k += 200) await commit((tx) => oldIds.slice(k, k + 200).forEach((id) => tx.delete(id)))
   console.log('obrisano prethodnog uvoza:', oldIds.length)
+
+  // brend SIA se uklanja iz Brendova na zahtjev klijenta
+  const sia: string[] = await client.fetch('*[_type=="brand" && lower(name)=="sia"]._id')
+  for (const id of sia) {
+    // ručno unesene SIA artikle ne diramo, samo im skidamo brend
+    const refs: string[] = await client.fetch('*[references($id)]._id', {id})
+    for (const r of refs) await client.patch(r).unset(['brand']).commit()
+    await client.delete(id)
+  }
+  console.log('obrisan brend SIA:', sia.length)
 
   // 2) brendovi: postojeći po nazivu, nepoznati se prave bez prikaza na stranici Brendovi
   const existing: {_id: string; name: string}[] = await client.fetch('*[_type=="brand"]{_id, name}')
@@ -212,20 +216,11 @@ async function run() {
     console.log(`upisano ${Math.min(k + 250, prodDocs.length)}/${prodDocs.length}`)
   }
 
-  // 4) NR krep traka: naziv, pakovanja i slika iz prethodnog uvoza
-  const nr = prodDocs.find((d) => /^nr traka/i.test(String(d.name)) && (d.variants ?? []).some((v: {name: string}) => /90.c orange/i.test(v.name)))
-  if (nr) {
-    const packs: Record<string, string> = {'19mm': '72', '25mm': '64', '38mm': '48', '50mm': '36'}
-    const variants = (nr.variants ?? []).map((v: {name: string}) => {
-      const size = Object.keys(packs).find((x) => v.name.replace(/\s/g, '').includes(x.replace('mm', 'mm')))
-      return size ? {...v, pack: packs[size]} : v
-    })
-    await client
-      .patch(nr._id)
-      .set({name: 'NR Krep traka Orange 90°C', slug: {_type: 'slug', current: 'nr-krep-traka-orange-90'}, variants, ...(nrOld ? {image: nrOld} : {})})
-      .commit()
-    console.log('NR krep traka ažurirana')
-  }
+  // 4) artikli kojih nema u Excelu (ručno uneseni ranije) se brišu
+  const keep = new Set(prodDocs.map((d) => d._id))
+  const stray: string[] = (await client.fetch('*[_type=="product"]._id')).filter((id: string) => !keep.has(id))
+  for (let k = 0; k < stray.length; k += 200) await commit((tx) => stray.slice(k, k + 200).forEach((id) => tx.delete(id)))
+  console.log('obrisano artikala kojih nema u Excelu:', stray.length)
 
   // 5) obriši kategorije koje više nijedan artikal ne koristi
   for (const type of ['tertiaryCategory', 'subcategory', 'category']) {

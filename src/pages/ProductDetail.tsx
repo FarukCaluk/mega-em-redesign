@@ -48,15 +48,15 @@ export default function ProductDetail() {
           <ArrowLeft size={16} /> Nazad na katalog
         </Link>
 
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
-          <Reveal variant="left">
+        <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+          <Reveal variant="left" className="mx-auto w-full max-w-sm lg:max-w-none">
             {product.image ? (
-              <div className="flex aspect-square items-center justify-center overflow-hidden rounded-3xl border border-black/5 bg-white">
-                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-10" />
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-white">
+                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-6" />
               </div>
             ) : (
-              <div className="flex aspect-square items-center justify-center rounded-3xl" style={{ background: `${color}14` }}>
-                <span className="flex h-28 w-28 items-center justify-center rounded-2xl text-3xl font-bold uppercase text-white" style={{ background: color }}>
+              <div className="flex aspect-[4/3] items-center justify-center rounded-2xl" style={{ background: `${color}14` }}>
+                <span className="flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-bold uppercase text-white" style={{ background: color }}>
                   {(product.brand || product.name).slice(0, 2)}
                 </span>
               </div>
