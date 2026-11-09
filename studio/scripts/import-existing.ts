@@ -3,6 +3,7 @@
 import {readFileSync, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {getCliClient} from 'sanity/cli'
+import {deployPaused} from './deploy'
 import {products} from '../../src/data/products'
 import {newsPosts} from '../../src/data/news'
 import {brands} from '../../src/data/brands'
@@ -133,7 +134,7 @@ async function run() {
   }
 }
 
-run().catch((e) => {
+deployPaused(run, {skip: false}).catch((e) => {
   console.error(e)
   process.exit(1)
 })

@@ -6,6 +6,7 @@
 // Artikli kojih nema u Excelu se brišu.
 // Dataset: DATASET=review za pregled prije objave (podrazumijevano production).
 import {getCliClient} from 'sanity/cli'
+import {deployPaused} from './deploy'
 import XLSX from 'xlsx'
 
 const FILE = process.env.XLSX ?? 'C:/Users/Korisnik/Downloads/Web import 4.11.2026. (2).xlsx'
@@ -229,7 +230,7 @@ async function run() {
     console.log('obrisano nekorištenih (' + type + '):', unused.length)
   }
 }
-run().catch((e) => {
+deployPaused(run, {skip: DRY}).catch((e) => {
   console.error(e)
   process.exit(1)
 })
