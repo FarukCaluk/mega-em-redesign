@@ -5,7 +5,7 @@ import {dirname, resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
 
 const PROJECT = 'w8dfy3y7'
-const DATASET = 'production'
+const DATASET = process.env.SANITY_DATASET || 'production'
 const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/data/generated/content.json')
 
 const query = `{
