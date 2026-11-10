@@ -4,6 +4,7 @@
 // Pravi uvoz:     npx sanity exec scripts/import-excel.ts --with-user-token
 // Putanju do fajla može se zadati sa XLSX=putanja
 import {getCliClient} from 'sanity/cli'
+import {deployPaused} from './deploy'
 import XLSX from 'xlsx'
 import content from '../../src/data/generated/content.json'
 
@@ -136,7 +137,7 @@ async function run() {
     console.log(`upisano ${Math.min(i + 200, toWrite.length)}/${toWrite.length}`)
   }
 }
-run().catch((e) => {
+deployPaused(run, {skip: false}).catch((e) => {
   console.error(e)
   process.exit(1)
 })

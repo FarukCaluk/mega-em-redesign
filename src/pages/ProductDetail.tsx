@@ -51,8 +51,8 @@ export default function ProductDetail() {
         <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
           <Reveal variant="left" className="mx-auto w-full max-w-sm lg:max-w-none">
             {product.image ? (
-              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-white">
-                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-6" />
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5">
+                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
               </div>
             ) : (
               <div className="flex aspect-[4/3] items-center justify-center rounded-2xl" style={{ background: `${color}14` }}>
@@ -68,8 +68,6 @@ export default function ProductDetail() {
               {product.category}
             </span>
             <h2 className="mt-4 font-display text-3xl font-semibold text-ink">{product.name}</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">{product.description}</p>
-
             <dl className="mt-8 grid gap-x-6 gap-y-5 rounded-2xl border border-black/5 bg-surface p-6 sm:grid-cols-2">
               {fields.map(([label, value]) => (
                 <div key={label}>
@@ -80,6 +78,13 @@ export default function ProductDetail() {
             </dl>
           </Reveal>
         </div>
+
+        {product.description && (
+          <div className="mt-12">
+            <h3 className="font-display text-xl font-semibold text-ink">Opis proizvoda</h3>
+            <p className="mt-4 whitespace-pre-line break-words [overflow-wrap:anywhere] rounded-2xl border border-black/5 bg-surface p-6 leading-relaxed text-muted">{product.description}</p>
+          </div>
+        )}
 
         {rows.length > 0 && (
           <div className="mt-16">

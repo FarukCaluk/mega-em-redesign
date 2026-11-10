@@ -6,6 +6,7 @@
 import {readdirSync, readFileSync} from 'node:fs'
 import {extname, join} from 'node:path'
 import {getCliClient} from 'sanity/cli'
+import {deployPaused} from './deploy'
 
 const DIR = process.env.IMAGES
 const DRY = process.env.DRY === '1'
@@ -54,7 +55,7 @@ async function run() {
     if ((i + 1) % 25 === 0 || i === matched.length - 1) console.log(`upisano ${i + 1}/${matched.length}`)
   }
 }
-run().catch((e) => {
+deployPaused(run, {skip: DRY}).catch((e) => {
   console.error(e)
   process.exit(1)
 })

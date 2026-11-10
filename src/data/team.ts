@@ -1,4 +1,4 @@
-import content from './generated/content.json'
+import { content } from './live'
 
 export interface TeamMember {
   name: string
