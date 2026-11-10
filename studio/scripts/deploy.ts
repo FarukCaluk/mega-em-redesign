@@ -1,7 +1,8 @@
 // (Sanity ne dozvoljava običnom korisničkom tokenu da postavi isDisabled, pa se webhook za vrijeme uvoza briše i poslije pravi iste postavke.)
 // Masovni uvoz ne smije praviti stotine Vercel deployeva (besplatni plan ima limit od 100 deployeva dnevno za cijeli nalog).
 // deployPaused(run): ukloni Sanity webhook(e) -> izvrši uvoz -> vrati ih nazad -> JEDNOM pozovi Vercel Deploy Hook.
-//   NO_DEPLOY=1  uvoz bez ikakvog deploya na kraju (webhook se ipak vrati)
+//   Sajt čita sadržaj uživo iz Sanityja, pa uvozu deploy NE treba: podrazumijevano se ne pokreće.
+//   DEPLOY=1     na kraju jednom pozovi Vercel Deploy Hook (npr. da se osvježi ugrađena rezerva sadržaja)
 // URL Vercel Deploy Hooka: varijabla okoline VERCEL_DEPLOY_HOOK ili fajl studio/deploy-hook.local (jedan red, nije u gitu).
 import {existsSync, readFileSync} from 'node:fs'
 import {getCliClient} from 'sanity/cli'
@@ -37,7 +38,7 @@ export async function deployPaused(run: () => Promise<unknown>, opts: {skip?: bo
   }
 
   const url = hookUrl()
-  if (process.env.NO_DEPLOY === '1') console.log('NO_DEPLOY=1: deploy nije pokrenut')
+  if (process.env.DEPLOY !== '1') console.log('deploy nije pokrenut (sajt čita sadržaj uživo iz Sanityja; DEPLOY=1 ako ga ipak želite)')
   else if (!url) console.log('deploy nije pokrenut: nema VERCEL_DEPLOY_HOOK / studio/deploy-hook.local')
   else {
     const res = await fetch(url, {method: 'POST'})

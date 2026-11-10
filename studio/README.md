@@ -8,11 +8,12 @@ Now you can do the following things:
 - [Join the Sanity community](https://www.sanity.io/community/join?utm_source=readme)
 - [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
 
-## Uvoz podataka i Vercel deploy
+## Sadržaj, uvoz i Vercel deploy
 
-Masovni uvoz ne smije pokrenuti stotine deployeva (Vercel besplatni plan: 100 deployeva dnevno za cijeli nalog).
-Sve `scripts/import-*.ts` skripte same uklone Sanity webhook za vrijeme uvoza, vrate ga nazad i **jednom** pozovu Vercel Deploy Hook.
+Sajt pri otvaranju povlači sadržaj uživo iz Sanityja (`src/data/live.ts`, Sanity CDN), pa izmjene iz Studija i uvozi stižu na sajt **bez deploya**.
+Ugrađeni `src/data/generated/content.json` (puni ga `npm run content` / build) je samo rezerva ako Sanity ne odgovori.
 
-- Jednom: URL Vercel Deploy Hooka (Vercel -> Settings -> Git -> Deploy Hooks) upišite u `studio/deploy-hook.local` (jedan red, nije u gitu), pa `npx sanity exec scripts/setup-webhook.ts --with-user-token` pravi webhook za objave iz Studija (bez draftova).
-- Uvoz: `npx sanity exec scripts/import-web.ts --with-user-token` (probni prolaz `DRY=1` ne dira ni webhook ni deploy).
-- `NO_DEPLOY=1` isključuje završni deploy.
+- **CORS:** domena sajta mora biti dodana u Sanity (`npx sanity cors add https://domena --no-credentials`). Trenutno: mega-em-redesign.vercel.app i localhost. Ako se doda nova domena (npr. mega-em.com), dodati i nju, inače sajt tiho koristi staru rezervu.
+- **Uvoz:** `npx sanity exec scripts/import-web.ts --with-user-token` (`DRY=1` probni prolaz). Skripte same uklone webhook za vrijeme uvoza, pa nema deployeva. `DEPLOY=1` na kraju jednom pozove Vercel Deploy Hook (URL u `studio/deploy-hook.local` ili VERCEL_DEPLOY_HOOK).
+- **Webhook za deploy** (`scripts/setup-webhook.ts`) više nije potreban jer se sadržaj ne ugrađuje u build. Nemojte ga praviti bez debounce-a (svaka objava = jedan deploy, Vercel besplatni plan ima limit od 100 deployeva dnevno za cijeli nalog).
+- Opis proizvoda (polje "Opis proizvoda") prikazuje se na stranici artikla ispod slike i podataka.

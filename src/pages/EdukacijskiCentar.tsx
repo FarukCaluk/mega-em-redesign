@@ -3,7 +3,7 @@ import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
 import Field, { inputClass } from '../components/Field'
 import FormCard from '../components/FormCard'
-import content from '../data/generated/content.json'
+import { content } from '../data/live'
 
 const courses = ['Priprema površine', 'Lakiranje', 'Koloristika', 'Poliranje']
 

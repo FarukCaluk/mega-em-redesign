@@ -67,7 +67,13 @@ export const product = defineType({
     defineField({name: 'manufacturer', title: 'Proizvođač', type: 'string'}),
     defineField({name: 'image', title: 'Slika', type: 'image', options: {hotspot: true}}),
     defineField({name: 'intro', title: 'Uvodna rečenica (prikazuje se na kartici)', type: 'string'}),
-    defineField({name: 'description', title: 'Opis', type: 'text', rows: 6}),
+    defineField({
+      name: 'description',
+      title: 'Opis proizvoda',
+      type: 'text',
+      rows: 10,
+      description: 'Prikazuje se na stranici artikla ispod slike i podataka. Novi red u tekstu ostaje novi red na sajtu.',
+    }),
     defineField({
       name: 'variants',
       title: 'Varijante (npr. veličine, RAL nijanse)',
