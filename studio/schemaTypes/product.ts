@@ -96,5 +96,5 @@ export const product = defineType({
     defineField({name: 'packSize', title: 'Broj komada u paketu (ako nema varijanti)', type: 'string'}),
     defineField({name: 'onlineCode', title: 'Online šifra (ako nema varijanti)', type: 'string'}),
   ],
-  preview: {select: {title: 'name', subtitle: 'brand', media: 'image', hidden: 'hidden'}, prepare: ({title, subtitle, media, hidden}) => ({title, subtitle: hidden ? `${subtitle ?? ''} (sakriveno)` : subtitle, media})},
+  preview: {select: {title: 'name', subtitle: 'brand.name', media: 'image', hidden: 'hidden'}, prepare: ({title, subtitle, media, hidden}) => ({title, subtitle: hidden ? `${subtitle ?? ''} (sakriveno)` : subtitle, media})},
 })
