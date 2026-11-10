@@ -51,8 +51,8 @@ export default function ProductDetail() {
         <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
           <Reveal variant="left" className="mx-auto w-full max-w-sm lg:max-w-none">
             {product.image ? (
-              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-white">
-                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-6" />
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5">
+                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
               </div>
             ) : (
               <div className="flex aspect-[4/3] items-center justify-center rounded-2xl" style={{ background: `${color}14` }}>
@@ -82,7 +82,7 @@ export default function ProductDetail() {
         {product.description && (
           <div className="mt-12">
             <h3 className="font-display text-xl font-semibold text-ink">Opis proizvoda</h3>
-            <p className="mt-4 whitespace-pre-line rounded-2xl border border-black/5 bg-surface p-6 leading-relaxed text-muted">{product.description}</p>
+            <p className="mt-4 whitespace-pre-line break-words [overflow-wrap:anywhere] rounded-2xl border border-black/5 bg-surface p-6 leading-relaxed text-muted">{product.description}</p>
           </div>
         )}
 
