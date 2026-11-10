@@ -3,7 +3,8 @@
 // Pravi uvoz:                           npx sanity exec scripts/import-web.ts --with-user-token
 // Pravila: COOL proizvodi i redovi označeni narandžastom bojom se preskaču; duplikati se ne uvoze;
 // varijante su ISKLJUČIVO redovi koji su u koloni Katalog spojeni u jednu ćeliju (jedan artikal, tabela varijanti).
-// Artikli kojih nema u Excelu se brišu.
+// Podrazumijevani režim je DODAVANJE: postoje li artikal (po šifri, ID-u ili nazivu), preskače se i ništa se ne briše ni prepisuje
+// (slike i opisi koje je klijent dodao u Studiju ostaju). MODE=replace je potpuna zamjena kataloga: briše i prepisuje sve iz Excela i artikle kojih nema u Excelu.
 // Dataset: DATASET=review za pregled prije objave (podrazumijevano production).
 import {getCliClient} from 'sanity/cli'
 import {deployPaused} from './deploy'
@@ -12,6 +13,7 @@ import XLSX from 'xlsx'
 const FILE = process.env.XLSX ?? 'C:/Users/Korisnik/Downloads/Web import 4.11.2026. (2).xlsx'
 const DRY = process.env.DRY === '1'
 const DATASET = process.env.DATASET ?? 'production'
+const REPLACE = process.env.MODE === 'replace'
 const ORANGE = 'F6C6AD'
 
 const t = (v: unknown) => String(v ?? '').replace(/\s+/g, ' ').trim()
@@ -132,7 +134,6 @@ const SKIP_BRANDS = new Set(['x']) // nepoznata oznaka "X" u katalogu, ne uvozi 
 
 
 async function run() {
-  if (DRY) return console.log('DRY: ništa nije upisano')
   const client = getCliClient({apiVersion: '2025-01-01'}).withConfig({dataset: DATASET})
   const commit = async (build: (tx: ReturnType<typeof client.transaction>) => void) => {
     const tx = client.transaction()
@@ -140,20 +141,25 @@ async function run() {
     await tx.commit()
   }
 
-  // 1) obriši prethodni Excel uvoz (zamjenjuje ga ovaj noviji katalog)
-  const oldIds: string[] = await client.fetch('*[_type=="product" && (_id match "xl-*" || _id match "web-*")]._id')
-  for (let k = 0; k < oldIds.length; k += 200) await commit((tx) => oldIds.slice(k, k + 200).forEach((id) => tx.delete(id)))
-  console.log('obrisano prethodnog uvoza:', oldIds.length)
+  if (DRY && REPLACE) return console.log('DRY (MODE=replace): ništa nije upisano')
+  console.log(REPLACE ? 'REŽIM: potpuna zamjena (MODE=replace)' : 'REŽIM: samo dodavanje novih artikala (postojeći se ne diraju)')
+
+  // 1) samo u režimu zamjene: obriši prethodni Excel uvoz
+  if (REPLACE) {
+    const oldIds: string[] = await client.fetch('*[_type=="product" && (_id match "xl-*" || _id match "web-*")]._id')
+    for (let k = 0; k < oldIds.length; k += 200) await commit((tx) => oldIds.slice(k, k + 200).forEach((id) => tx.delete(id)))
+    console.log('obrisano prethodnog uvoza:', oldIds.length)
+  }
 
   // brend SIA se uklanja iz Brendova na zahtjev klijenta
-  const sia: string[] = await client.fetch('*[_type=="brand" && lower(name)=="sia"]._id')
+  const sia: string[] = REPLACE ? await client.fetch('*[_type=="brand" && lower(name)=="sia"]._id') : []
   for (const id of sia) {
     // ručno unesene SIA artikle ne diramo, samo im skidamo brend
     const refs: string[] = await client.fetch('*[references($id)]._id', {id})
     for (const r of refs) await client.patch(r).unset(['brand']).commit()
     await client.delete(id)
   }
-  console.log('obrisan brend SIA:', sia.length)
+  if (REPLACE) console.log('obrisan brend SIA:', sia.length)
 
   // 2) brendovi: postojeći po nazivu, nepoznati se prave bez prikaza na stranici Brendovi
   const existing: {_id: string; name: string}[] = await client.fetch('*[_type=="brand"]{_id, name}')
@@ -194,7 +200,19 @@ async function run() {
   }
 
   const usedSlugs = new Set<string>(await client.fetch('*[_type=="product"].slug.current'))
-  const prodDocs = docs.map((d) => {
+  // u režimu dodavanja: artikli koji već postoje (ID, šifra ili naziv) se preskaču
+  let toWrite = docs
+  if (!REPLACE) {
+    const have: {_id: string; sku?: string; name?: string}[] = await client.fetch('*[_type=="product"]{_id, sku, name}')
+    const ids = new Set(have.map((h) => h._id))
+    const skus = new Set(have.map((h) => h.sku).filter(Boolean))
+    const names = new Set(have.map((h) => (h.name ?? '').toLowerCase()))
+    toWrite = docs.filter((d) => !ids.has(d._id) && !(d.sku && skus.has(d.sku)) && !names.has(d.name.toLowerCase()))
+    console.log(`već postoji (preskočeno): ${docs.length - toWrite.length}, novih za dodavanje: ${toWrite.length}`)
+    console.log('novi artikli (prvih 10):', toWrite.slice(0, 10).map((d) => d.name))
+    if (DRY) return console.log('DRY: ništa nije upisano')
+  }
+  const prodDocs = toWrite.map((d) => {
     let slug = slugOf(d.name) || slugOf(d.sku)
     if (usedSlugs.has(slug)) slug = `${slug}-${slugOf(d.sku)}`
     usedSlugs.add(slug)
@@ -213,11 +231,12 @@ async function run() {
   console.log(`brendova novih: ${newBrands.size}, kategorija/podkategorija/tercijarnih: ${cats.size}`)
 
   for (let k = 0; k < prodDocs.length; k += 250) {
-    await commit((tx) => prodDocs.slice(k, k + 250).forEach((d) => tx.createOrReplace(d)))
+    await commit((tx) => prodDocs.slice(k, k + 250).forEach((d) => tx.createIfNotExists(d)))
     console.log(`upisano ${Math.min(k + 250, prodDocs.length)}/${prodDocs.length}`)
   }
 
-  // 4) artikli kojih nema u Excelu (ručno uneseni ranije) se brišu
+  // 4) samo u režimu zamjene: artikli kojih nema u Excelu se brišu
+  if (REPLACE) {
   const keep = new Set(prodDocs.map((d) => d._id))
   const stray: string[] = (await client.fetch('*[_type=="product"]._id')).filter((id: string) => !keep.has(id))
   for (let k = 0; k < stray.length; k += 200) await commit((tx) => stray.slice(k, k + 200).forEach((id) => tx.delete(id)))
@@ -228,6 +247,7 @@ async function run() {
     const unused: string[] = await client.fetch('*[_type==$t && count(*[references(^._id)])==0]._id', {t: type})
     if (unused.length) await commit((tx) => unused.forEach((id) => tx.delete(id)))
     console.log('obrisano nekorištenih (' + type + '):', unused.length)
+  }
   }
 }
 deployPaused(run, {skip: DRY}).catch((e) => {

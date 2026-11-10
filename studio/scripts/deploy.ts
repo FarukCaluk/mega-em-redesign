@@ -23,7 +23,6 @@ export async function deployPaused(run: () => Promise<unknown>, opts: {skip?: bo
   const paused: Hook[] = ((await call('')) as Hook[]).filter((h) => !h.isDisabled)
   for (const h of paused) await call(`/${h.id}`, {method: 'DELETE'})
   if (paused.length) console.log(`webhook uklonjen za vrijeme uvoza: ${paused.map((h) => h.name).join(', ')}`)
-  else console.log('upozorenje: nema aktivnog Sanity webhooka (sajt se ne gradi sam od izmjena u Studiju)')
 
   try {
     await run()
