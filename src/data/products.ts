@@ -19,7 +19,8 @@ export interface Product {
   variants?: { name: string; pack: string; code: string }[]
 }
 
-export const productIntro = (p: Product) => p.intro ?? p.description.split(/(?<=\.)\s/)[0]
+// kratak opis za karticu: najviše dvije rečenice (cijeli opis je na stranici artikla)
+export const productIntro = (p: Product) => p.intro ?? p.description.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/).slice(0, 2).join(' ')
 
 // sadržaj dolazi iz Sanity CMS-a (scripts/fetch-content.mjs)
 export const products = content.products as Product[]
