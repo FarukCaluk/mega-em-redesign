@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
@@ -11,6 +12,12 @@ const paragraphs = [
   'Mega-Em svojim partnerima pruža tehničku podršku, savjetovanje i pomoć pri odabiru i primjeni proizvoda. Od 2026. godine, dodatnu vrijednost našoj ponudi predstavlja i Trening centar Mega-Em, namijenjen stručnom usavršavanju, edukaciji i praktičnoj obuci. Centar je otvoren kako za naše postojeće partnere i kupce, tako i za nove generacije stručnjaka, pružajući im mogućnost da kroz teorijska znanja i praktičan rad unaprijede svoje vještine i upoznaju se sa savremenim rješenjima i tehnologijama u našim poslovnim segmentima.',
 ]
 
+// slike iza odgovarajućeg odlomka (ključ = indeks odlomka)
+const photos: Record<number, { src: string; w: number; h: number; alt: string }> = {
+  1: { src: '/images/firma/sjediste.webp', w: 1262, h: 848, alt: 'Sjedište kompanije Mega-Em u Visokom' },
+  5: { src: '/images/firma/zgrada-firme.webp', w: 1200, h: 809, alt: 'Zgrada Mega-Em kompleksa u Visokom' },
+}
+
 export default function About() {
   return (
     <>
@@ -18,9 +25,16 @@ export default function About() {
 
       <section className="mx-auto max-w-3xl px-6 py-16">
         {paragraphs.map((p, i) => (
-          <Reveal key={i} delay={Math.min(i * 40, 160)} variant={i % 2 ? 'right' : 'left'}>
-            <p className={`leading-relaxed ${i === 0 ? 'text-lg text-ink/80' : 'mt-5 text-muted'}`}>{p}</p>
-          </Reveal>
+          <Fragment key={i}>
+            <Reveal delay={Math.min(i * 40, 160)} variant={i % 2 ? 'right' : 'left'}>
+              <p className={`leading-relaxed ${i === 0 ? 'text-lg text-ink/80' : 'mt-5 text-muted'}`}>{p}</p>
+            </Reveal>
+            {photos[i] && (
+              <Reveal className="mt-8">
+                <img loading="lazy" decoding="async" src={photos[i].src} width={photos[i].w} height={photos[i].h} alt={photos[i].alt} className="w-full rounded-2xl object-cover shadow-lg shadow-primary/10" />
+              </Reveal>
+            )}
+          </Fragment>
         ))}
       </section>
 

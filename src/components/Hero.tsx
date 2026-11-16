@@ -19,8 +19,8 @@ export default function Hero() {
     <section className="grain relative overflow-hidden bg-ink text-white">
       {/* zamućena pozadina: kompanija + edukacijski centar (na telefonu samo jedna slika) */}
       <div className="pointer-events-none absolute inset-0 grid sm:grid-cols-2" aria-hidden>
-        <img src="/images/trening-centar/trening-centar-tim-bg.webp" width="493" height="590" alt="" fetchPriority="high" decoding="async" className="h-full w-full scale-105 object-cover blur-[3px]" />
-        <img src="/images/team/tim-mega-em-bg.webp" width="960" height="444" alt="" decoding="async" className="hidden h-full w-full scale-105 object-cover blur-[3px] sm:block" />
+        <img src="/images/firma/ulaz-edukacijski-centar.webp" width="800" height="964" alt="" fetchPriority="high" decoding="async" className="h-full w-full scale-105 object-cover blur-[3px]" />
+        <img src="/images/firma/zgrada-firme.webp" width="1200" height="809" alt="" decoding="async" className="hidden h-full w-full scale-105 object-cover blur-[3px] sm:block" />
       </div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink" />
       <div className="pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] bg-[radial-gradient(closest-side,rgb(130_9_155/0.35),transparent)]" />
