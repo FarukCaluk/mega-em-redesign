@@ -17,7 +17,3 @@ export const productCategories = [
   { title: 'PUR pjene, silikoni, sprejevi', desc: 'Montažne pjene, silikoni i sprejevi za građevinarstvo i industriju.' },
 ]
 
-export const catalogs = [
-  { title: 'Katalog autoreparatura', href: 'https://mega-em.com/autoreparatura-katalog/' },
-  { title: 'Katalog alata', href: 'https://mega-em.com/katalog-alata/' },
-]
