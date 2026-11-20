@@ -19,6 +19,7 @@ export default function Karijera() {
             title="Prijava za posao"
             icon={Briefcase}
             subject="Prijava za posao — Mega-Em"
+            to="office@mega-em.com"
             success="Hvala! Vaša prijava je poslana, javit ćemo vam se."
             submitLabel="Pošalji prijavu"
             native

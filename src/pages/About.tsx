@@ -14,7 +14,6 @@ const paragraphs = [
 
 // slike iza odgovarajućeg odlomka (ključ = indeks odlomka)
 const photos: Record<number, { src: string; w: number; h: number; alt: string }> = {
-  1: { src: '/images/firma/sjediste.webp', w: 1262, h: 848, alt: 'Sjedište kompanije Mega-Em u Visokom' },
   5: { src: '/images/firma/zgrada-firme.webp', w: 1200, h: 809, alt: 'Zgrada Mega-Em kompleksa u Visokom' },
 }
 
