@@ -17,12 +17,13 @@ export default function Hero() {
 
   return (
     <section className="grain relative overflow-hidden bg-ink text-white">
-      {/* zamućena pozadina: kompanija + edukacijski centar (na telefonu samo jedna slika) */}
-      <div className="pointer-events-none absolute inset-0 grid sm:grid-cols-2" aria-hidden>
-        <img src="/images/firma/ulaz-edukacijski-centar.webp" width="800" height="964" alt="" fetchPriority="high" decoding="async" className="h-full w-full scale-105 object-cover blur-[3px]" />
-        <img src="/images/firma/zgrada-firme.webp" width="1200" height="809" alt="" decoding="async" className="hidden h-full w-full scale-105 object-cover blur-[3px] sm:block" />
+      {/* zamućena pozadina. Računar: ulaz u edukacijski centar | zgrada firme. Telefon: zgrada firme iznad, sjedište firme ispod */}
+      <div className="pointer-events-none absolute inset-0 grid grid-rows-2 sm:grid-cols-2 sm:grid-rows-1" aria-hidden>
+        <img src="/images/firma/ulaz-edukacijski-centar.webp" width="800" height="964" alt="" decoding="async" className="hidden h-full w-full scale-105 object-cover blur-[3px] sm:block" />
+        <img src="/images/firma/zgrada-firme.webp" width="1200" height="809" alt="" fetchPriority="high" decoding="async" className="h-full w-full scale-105 object-cover blur-[2px] sm:blur-[3px]" />
+        <img src="/images/firma/sjediste.webp" width="1262" height="848" alt="" decoding="async" className="h-full w-full scale-105 object-cover blur-[2px] sm:hidden" />
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/60 to-ink" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/50 to-ink sm:from-ink/70 sm:via-ink/60" />
       <div className="pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px] bg-[radial-gradient(closest-side,rgb(130_9_155/0.35),transparent)]" />
       <div className="pointer-events-none absolute right-0 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(closest-side,rgb(161_60_176/0.25),transparent)]" />
 

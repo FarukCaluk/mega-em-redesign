@@ -17,8 +17,9 @@
     <script>
       // hero slike na početnoj otkrivamo odmah, ne tek nakon JS-a
       if (location.pathname === '/') {
-        var imgs = ['trening-centar/trening-centar-tim-bg.webp'];
-        if (matchMedia('(min-width:640px)').matches) imgs.push('team/tim-mega-em-bg.webp');
+        var imgs = matchMedia('(min-width:640px)').matches
+          ? ['firma/zgrada-firme.webp', 'firma/ulaz-edukacijski-centar.webp']
+          : ['firma/zgrada-firme.webp', 'firma/sjediste.webp'];
         imgs.forEach(function (p) {
           var l = document.createElement('link');
           l.rel = 'preload';

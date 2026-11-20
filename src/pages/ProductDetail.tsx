@@ -5,6 +5,7 @@ import { products, productCategoryList } from '../data/products'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
+import NewBadge from '../components/NewBadge'
 
 const VARIANT_LIMIT = 15
 
@@ -51,14 +52,16 @@ export default function ProductDetail() {
         <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
           <Reveal variant="left" className="mx-auto w-full max-w-sm lg:max-w-none">
             {product.image ? (
-              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5">
+              <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5">
                 <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                {product.isNew && <NewBadge />}
               </div>
             ) : (
-              <div className="flex aspect-[4/3] items-center justify-center rounded-2xl" style={{ background: `${color}14` }}>
+              <div className="relative flex aspect-[4/3] items-center justify-center rounded-2xl" style={{ background: `${color}14` }}>
                 <span className="flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-bold uppercase text-white" style={{ background: color }}>
                   {(product.brand || product.name).slice(0, 2)}
                 </span>
+                {product.isNew && <NewBadge />}
               </div>
             )}
           </Reveal>

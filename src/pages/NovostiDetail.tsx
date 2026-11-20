@@ -4,6 +4,7 @@ import { newsPosts } from '../data/news'
 import { swatches } from '../data/content'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
+import ShareButtons from '../components/ShareButtons'
 
 export default function NovostiDetail() {
   const { slug } = useParams()
@@ -42,6 +43,8 @@ export default function NovostiDetail() {
             <p key={i} className="leading-relaxed text-ink/80">{p}</p>
           ))}
         </Reveal>
+
+        <ShareButtons title={post.title} />
       </section>
     </>
   )

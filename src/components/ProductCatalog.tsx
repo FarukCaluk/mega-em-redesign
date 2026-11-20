@@ -5,6 +5,7 @@ import { products, productCategoryList, productBrandList, productSubcategoryList
 import { brandByName } from '../data/brands'
 import { swatches } from '../data/content'
 import TiltCard from './TiltCard'
+import NewBadge from './NewBadge'
 
 function FilterGroup({
   title,
@@ -222,14 +223,16 @@ export default function ProductCatalog() {
                     <TiltCard glow={color} className="h-full !border-primary/10 !bg-gradient-to-br !from-primary/[0.06] !to-primary-light/[0.02]">
                       <div className="flex h-full flex-col">
                         {p.image ? (
-                          <div className="aspect-[4/3] overflow-hidden rounded-t-2xl">
+                          <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
                             <img loading="lazy" decoding="async" src={p.image} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover/tilt:scale-105" />
+                            {p.isNew && <NewBadge />}
                           </div>
                         ) : (
-                          <div className="flex aspect-[4/3] items-center justify-center rounded-t-2xl" style={{ background: `${color}14` }}>
+                          <div className="relative flex aspect-[4/3] items-center justify-center rounded-t-2xl" style={{ background: `${color}14` }}>
                             <span className="flex h-14 w-14 items-center justify-center rounded-xl text-sm font-bold uppercase text-white" style={{ background: color }}>
                               {(p.brand || p.name).slice(0, 2)}
                             </span>
+                            {p.isNew && <NewBadge />}
                           </div>
                         )}
                         <div className="flex flex-1 flex-col p-6">
