@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, Send, Briefcase, Check } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
+import Select from '../components/Select'
 import { swatches } from '../data/content'
 
 const reasons = ['Upit o proizvodima', 'Saradnja', 'Reklamacija', 'Ostalo']
@@ -34,10 +35,7 @@ export default function Contact() {
             <input required type="email" placeholder="E-mail adresa" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
               className="rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-primary" />
           </div>
-          <select value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })}
-            className="w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-primary">
-            {reasons.map((r) => <option key={r}>{r}</option>)}
-          </select>
+          <Select options={reasons} value={form.reason} onChange={(reason) => setForm({ ...form, reason })} />
           <textarea required placeholder="Poruka" rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
             className="w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-primary" />
           <button className="flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/25 active:translate-y-0">
