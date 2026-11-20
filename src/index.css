@@ -142,3 +142,12 @@ html {
 @media (max-width: 767px) {
   .grain::before { display: none; }
 }
+
+/* iPhone zumira stranicu kad se klikne polje čiji je tekst manji od 16px; na dodirnim ekranima sva polja imaju 16px */
+@media (pointer: coarse) {
+  input:not([type='checkbox'], [type='radio'], [type='file'], [type='hidden']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
