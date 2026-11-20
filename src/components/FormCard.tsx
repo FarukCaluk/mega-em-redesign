@@ -1,21 +1,23 @@
 import type { ReactNode } from 'react'
 import { CheckCircle2, type LucideIcon } from 'lucide-react'
-import { useFormSend, TEST_EMAIL } from '../lib/useFormSend'
+import { useFormSend } from '../lib/useFormSend'
 
+// to: adresa na koju stiže formular
 // native: običan POST (potreban za priloge, FormSubmit ih ne prima preko AJAX-a); nakon slanja vraća na ?poslano=1
-export default function FormCard({ title, icon: Icon, subject, success, submitLabel, native, children }: {
+export default function FormCard({ title, icon: Icon, subject, to, success, submitLabel, native, children }: {
   title: string
   icon: LucideIcon
   subject: string
+  to: string
   success: string
   submitLabel: string
   native?: boolean
   children: ReactNode
 }) {
-  const { status, onSubmit } = useFormSend(subject)
+  const { status, onSubmit } = useFormSend(subject, to)
   const done = native ? window.location.search.includes('poslano=1') : status === 'done'
   const formProps = native
-    ? { action: `https://formsubmit.co/${TEST_EMAIL}`, method: 'POST', encType: 'multipart/form-data' }
+    ? { action: `https://formsubmit.co/${to}`, method: 'POST', encType: 'multipart/form-data' }
     : { onSubmit }
 
   return (

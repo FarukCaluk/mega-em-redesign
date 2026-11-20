@@ -1,10 +1,7 @@
 import { useState, type FormEvent } from 'react'
 
-// ponytail: privremeno sve ide na testni mail; za produkciju zamijeni adresom (npr. trening.centar@mega-em.com)
-export const TEST_EMAIL = 'farukcaluk12@gmail.com'
-
-// FormSubmit (formsubmit.co) šalje mail sa poljima i prilogom bez backenda; prvi upit traži aktivaciju putem maila
-export function useFormSend(subject: string, to = TEST_EMAIL) {
+// FormSubmit (formsubmit.co) šalje mail sa poljima i prilogom bez backenda; za svaku novu adresu prvi upit traži jednokratnu aktivaciju putem maila
+export function useFormSend(subject: string, to: string) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {

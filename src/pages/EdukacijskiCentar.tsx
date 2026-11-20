@@ -64,6 +64,7 @@ export default function EdukacijskiCentar() {
             title="Popunite formular"
             icon={GraduationCap}
             subject="Upit za edukaciju — Mega-Em"
+            to="megaemtc@gmail.com"
             success="Bićete obaviješteni putem maila da li vam je primljena rezervacija."
             submitLabel="Pošalji upit"
           >
