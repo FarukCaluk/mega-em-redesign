@@ -10,6 +10,7 @@ export interface Product {
   sku: string
   description: string
   image?: string
+  isNew?: boolean // oznaka "Novo u ponudi"
   intro?: string
   supplierName?: string
   manufacturer?: string

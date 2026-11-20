@@ -5,7 +5,7 @@ export const QUERY = `{
   "products": *[_type == "product" && hidden != true] | order(name asc) {
     "id": slug.current, name, "brand": coalesce(brand->name, ""), "category": coalesce(category->title, ""), "subcategory": subcategory->title, "tertiary": tertiaryCategory->title, "sku": coalesce(sku, ""),
     "description": coalesce(description, ""), "image": image.asset._ref, intro, manufacturer,
-    packSize, onlineCode, "variants": variants[]{name, pack, code}
+    packSize, onlineCode, "isNew": coalesce(newInOffer, false), "variants": variants[]{name, pack, code}
   },
   "news": *[_type == "newsPost"] | order(pinned desc, date desc) {
     "slug": slug.current, title, "excerpt": coalesce(excerpt, ""), date, "category": coalesce(category, ""),

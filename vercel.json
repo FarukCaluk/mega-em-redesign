@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/novosti/:slug",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|WhatsApp|Viber|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot|Applebot).*" }],
+      "destination": "/api/novost?slug=:slug"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

@@ -62,6 +62,13 @@ export const product = defineType({
       description: 'Uključeno = proizvod se ne prikazuje u katalogu. Isključite kad popunite brend, kategoriju i opis.',
       initialValue: false,
     }),
+    defineField({
+      name: 'newInOffer',
+      title: 'Novo u ponudi',
+      type: 'boolean',
+      description: 'Uključeno = na kartici proizvoda u katalogu (u uglu slike) i na stranici artikla pojavljuje se oznaka "Novo u ponudi".',
+      initialValue: false,
+    }),
     defineField({name: 'supplierName', title: 'Naziv dobavljača', type: 'string'}),
     defineField({name: 'supplierCode', title: 'Šifra dobavljača', type: 'string'}),
     defineField({name: 'manufacturer', title: 'Proizvođač', type: 'string'}),
