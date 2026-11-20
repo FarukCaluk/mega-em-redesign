@@ -1,7 +1,8 @@
 import { GraduationCap, Mail, Phone, User, Users, BookOpen, Wrench, Presentation, Cpu } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import PageIntro from '../components/PageIntro'
-import Field, { inputClass } from '../components/Field'
+import Field from '../components/Field'
+import Select from '../components/Select'
 import FormCard from '../components/FormCard'
 import { content } from '../data/live'
 
@@ -77,13 +78,7 @@ export default function EdukacijskiCentar() {
               <Field icon={Phone} name="Kontakt" required placeholder="Kontakt" />
               <Field icon={Users} name="Broj učesnika" type="number" min={1} required placeholder="Broj učesnika" />
             </div>
-            <div className="relative">
-              <BookOpen size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-              <select name="Edukacija" required defaultValue="" className={`${inputClass} appearance-none`}>
-                <option value="" disabled>Odaberite edukaciju</option>
-                {courses.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
+            <Select icon={BookOpen} name="Edukacija" required placeholder="Odaberite edukaciju" options={courses} />
             <textarea name="Opis" rows={4} placeholder="Opis" className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary" />
           </FormCard>
         </Reveal>
