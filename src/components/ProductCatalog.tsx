@@ -223,8 +223,9 @@ export default function ProductCatalog() {
                     <TiltCard glow={color} className="h-full !border-primary/10 !bg-gradient-to-br !from-primary/[0.06] !to-primary-light/[0.02]">
                       <div className="flex h-full flex-col">
                         {p.image ? (
-                          <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
-                            <img loading="lazy" decoding="async" src={p.image} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover/tilt:scale-105" />
+                          // cijela slika stane u okvir (bez rezanja), ostatak okvira je bijel
+                          <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl bg-white">
+                            <img loading="lazy" decoding="async" src={p.image} alt={p.name} className="h-full w-full object-contain p-3 transition duration-500 group-hover/tilt:scale-105" />
                             {p.isNew && <NewBadge />}
                           </div>
                         ) : (

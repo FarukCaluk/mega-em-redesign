@@ -14,7 +14,24 @@ export const product = defineType({
       description: 'Automatski se napravi iz naziva. Mijenjajte samo ako je potrebno.',
       validation: (r) => r.required(),
     }),
-    defineField({name: 'sku', title: 'Šifra Mega-Em', type: 'string'}),
+    defineField({
+      name: 'sku',
+      title: 'Šifra Mega-Em',
+      type: 'string',
+      description: 'Svaki proizvod mora imati svoju šifru: već zauzeta šifra se ne može objaviti.',
+      // ista šifra (bez obzira na velika/mala slova i razmake) ne smije biti na dva proizvoda, ni objavljena ni u nacrtu
+      validation: (r) =>
+        r.custom(async (value, context) => {
+          const sku = value?.trim().toLowerCase()
+          if (!sku) return true
+          const id = context.document?._id.replace(/^drafts\./, '') ?? ''
+          const other: {name?: string} | null = await context
+            .getClient({apiVersion: '2025-01-01'})
+            .withConfig({perspective: 'raw'})
+            .fetch('*[_type == "product" && lower(sku) == $sku && !(_id in [$id, "drafts." + $id]) && !(_id in path("versions.**"))][0]{name}', {sku, id})
+          return other ? `Šifra "${value?.trim()}" već postoji na proizvodu: ${other.name ?? '(bez naziva)'}` : true
+        }),
+    }),
     defineField({
       name: 'brand',
       title: 'Brend',
