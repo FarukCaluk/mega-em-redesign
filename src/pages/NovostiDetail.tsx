@@ -16,7 +16,7 @@ export default function NovostiDetail() {
 
   return (
     <>
-      <PageIntro eyebrow="Novosti" title={post.title} description={post.date} />
+      <PageIntro eyebrow="Novosti" title={post.title} description={post.date} metaDescription={post.excerpt || post.content[0]} />
 
       <section className="mx-auto max-w-3xl px-6 py-16">
         <Link to="/novosti" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary">

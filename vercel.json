@@ -2,9 +2,9 @@
   "rewrites": [
     {
       "source": "/novosti/:slug",
-      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|WhatsApp|Viber|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|SkypeUriPreview|Pinterest|Googlebot|bingbot|Applebot).*" }],
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|WhatsApp|Viber|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|SkypeUriPreview|Pinterest).*" }],
       "destination": "/api/novost?slug=:slug"
     },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!\\.well-known/).*)", "destination": "/index.html" }
   ]
 }
