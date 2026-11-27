@@ -52,8 +52,8 @@ export default function ProductDetail() {
         <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
           <Reveal variant="left" className="mx-auto w-full max-w-sm lg:max-w-none">
             {product.image ? (
-              <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5">
-                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+              <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-black/5 bg-white">
+                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-3" />
                 {product.isNew && <NewBadge />}
               </div>
             ) : (
