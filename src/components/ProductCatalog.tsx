@@ -238,7 +238,7 @@ export default function ProductCatalog() {
                         )}
                         <div className="flex flex-1 flex-col p-6">
                           <p className="text-xs font-medium uppercase tracking-wide" style={{ color }}>{p.brand}</p>
-                          <h3 className="mt-2 font-display text-lg font-semibold text-ink [overflow-wrap:anywhere] transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{p.name}</h3>
+                          <h2 className="mt-2 font-display text-lg font-semibold text-ink [overflow-wrap:anywhere] transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{p.name}</h2>
                           <p className="mt-2 flex-1 text-sm text-muted line-clamp-3 [overflow-wrap:anywhere]">{productIntro(p)}</p>
                           <span className="mt-4 flex items-center gap-1.5 text-sm font-medium" style={{ color }}>
                             Detalji <ArrowRight size={14} />

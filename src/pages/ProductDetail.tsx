@@ -42,7 +42,12 @@ export default function ProductDetail() {
 
   return (
     <>
-      <PageIntro eyebrow="Katalog proizvoda" title={product.name} description={product.category} />
+      <PageIntro
+        eyebrow="Katalog proizvoda"
+        title={product.name}
+        description={product.category}
+        metaDescription={`${[product.name, product.brand, product.subcategory || product.category].filter(Boolean).join(' · ')}. ${product.intro || product.description || 'U ponudi Mega-Em d.o.o., Visoko.'}`}
+      />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
         <Link to={`/proizvodi${savedSearch()}`} className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-primary">

@@ -25,7 +25,7 @@ export default function FranzizniPartneri() {
                     )}
                   </div>
                   <div className="p-6">
-                    <h3 className="text-lg font-bold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{f.name}</h3>
+                    <h2 className="text-lg font-bold text-ink transition-colors duration-300 group-hover/tilt:text-[var(--glow)]">{f.name}</h2>
                     <ul className="mt-4 space-y-2.5 text-sm text-muted">
                       <li className="flex gap-2.5"><MapPin size={16} className="mt-0.5 shrink-0" /> <span><b className="font-medium text-ink">{f.city}</b>{f.address && <>, {f.address.replace(`, ${f.city}`, '')}</>}</span></li>
                       {f.phone && (

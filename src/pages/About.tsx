@@ -20,7 +20,7 @@ const photos: Record<number, { src: string; w: number; h: number; alt: string }>
 export default function About() {
   return (
     <>
-      <PageIntro eyebrow="O nama" title="Historijat kompanije" />
+      <PageIntro eyebrow="O nama" title="Historijat kompanije" metaDescription="Historijat kompanije Mega-Em, distributera hemikalija, autoreparaturnih materijala i alata u Bosni i Hercegovini od 1996. godine." />
 
       <section className="mx-auto max-w-3xl px-6 py-16">
         {paragraphs.map((p, i) => (
