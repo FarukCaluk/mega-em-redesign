@@ -33,7 +33,7 @@ function Layout() {
       <ScrollToTop />
       <Header />
       <main className="flex-1">
-        <Suspense fallback={<div className="min-h-[60vh]" />}>
+        <Suspense fallback={<div className="min-h-screen" />}>
           <Outlet />
         </Suspense>
       </main>
